@@ -4,7 +4,7 @@ import state
 
 
 class Screen:
-    
+
     def __init__(self):
         self.surface = None
         self.screen_info = None

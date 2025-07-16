@@ -22,7 +22,7 @@ class Loop:
         self.errore = None
         self.resize = True
         self.click = ()
-    
+
     def init(self):
         self.clock = pygame.time.Clock()
         db = Db()
@@ -48,7 +48,7 @@ class Loop:
                 print(traceback.format_exc())
                 self.errore = e
             self.render()
-    
+
     def check_input(self):
         self.click = ()
         for event in pygame.event.get():
@@ -71,7 +71,7 @@ class Loop:
             if event.type == pygame.QUIT:
                 state.vars["running"] = False
         state.vars["keys"] = pygame.key.get_pressed()
-    
+
     def update(self):
         self.screen.update(self.resize)
         self.interfaccia.update(self.resize)
@@ -79,7 +79,7 @@ class Loop:
         self.player.update(state.vars["keys"], self.mappa.width, self.mappa.height)
         self.camera.update()
         self.mappa.update(self.camera)
-    
+
     def do_interaction(self):
         collisi = pygame.sprite.spritecollide(self.player, self.mappa.visible_wall, False)
         if collisi:
@@ -94,15 +94,15 @@ class Loop:
                 if item.rect.collidepoint(x, y):
                     if self.player.rect.colliderect(item.rect.inflate(dist, dist)):
                         item.act(self.player, self.mappa.items, self.interfaccia.dialog)
-    
+
     def animate(self):
         #todo animazioni
         pass
-    
+
     def audio(self):
         #todo audio
         pass
-    
+
     def render(self):
         try:
             #todo usare una cache per non ricreare sempre tutte le surface/sprite

@@ -15,11 +15,11 @@ class Interfaccia:
         self.gaming_area = GamingArea(self.sprite_set, self.screen)
         self.minimap = Minimap(self.sprite_set, self.screen)
         self.dialog = Dialog(self.sprite_set, self.screen)
-    
+
     def update(self, resize:bool):
         for sprite in self.sprite_set:
             sprite.update(resize)
-    
+
     def draw(self):
         for sprite in self.sprite_set:
             sprite.draw()
@@ -151,7 +151,7 @@ class Characters(pygame.sprite.Sprite):
             self.rect.y = y
 
     def calculate(self)->tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5 
+        w = (self.screen.screen_info.current_w - 20) // 5
         h = (self.screen.screen_info.current_h - 20) - 90
         x = 10
         y = 80
@@ -182,7 +182,7 @@ class GamingArea(pygame.sprite.Sprite):
         w = (self.screen.screen_info.current_w - 20) // 5 * 4
         h = (self.screen.screen_info.current_h - 20) - 80
         x = (self.screen.screen_info.current_w -  20) // 5 + 10
-        y = 90 
+        y = 90
         return w, h, x, y
 
     def draw(self):

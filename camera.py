@@ -4,7 +4,7 @@ from map import Map
 
 
 class Camera:
-    
+
     def __init__(self, target:pygame.sprite.Sprite, area:pygame.sprite.Sprite, mappa:Map):
         self.target = target
         self.area = area

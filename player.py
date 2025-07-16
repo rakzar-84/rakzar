@@ -7,7 +7,7 @@ from map import Map
 
 
 class Player(pygame.sprite.Sprite):
-    
+
     def __init__(self, db:Db, tile_size:int):
         super().__init__()
         self.db = db

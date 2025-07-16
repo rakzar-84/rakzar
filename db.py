@@ -4,11 +4,11 @@ import state
 
 
 class Db:
-    
+
     def __init__(self):
         self.conn = None
         self.cursor = None
-    
+
     def connect(self):
         try:
             self.conn = sqlite3.connect(state.config['db'])

@@ -106,11 +106,11 @@ class Map:
         for item in self.visible_items:
             rect_area = item.rect.move(-camera_left, -camera_top)
             area.blit(item.image, rect_area)
-            
+
 
 
 class Tile(pygame.sprite.Sprite):
-    
+
     def __init__(self, image:pygame.surface.Surface, rect:pygame.Rect, type:int, muro:bool):
         super().__init__()
         self.image = image
@@ -120,7 +120,7 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Item(pygame.sprite.Sprite):
-    
+
     def __init__(self, id:str, data:dict, tiles_images:list):
         super().__init__()
         self.image = tiles_images[data["img"]]
