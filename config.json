@@ -1,0 +1,10 @@
+{
+    "nome":"Rakzar",
+    "versione":"0.1.0",
+    "fps":60,
+    "fullscreen": true,
+    "db":"rakzar.db",
+    "mappa":"mappe/default/",
+    "personaggio":1,
+    "debug":true
+}

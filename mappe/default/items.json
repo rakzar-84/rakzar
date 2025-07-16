@@ -1,0 +1,60 @@
+{
+    "porta_1":{
+        "tipo": "porta",
+        "img": 2,
+        "pos": [500, 2800],
+        "stato": "chiusa"
+    },
+    "leva_1":{
+        "tipo": "leva",
+        "img": 86,
+        "pos": [1400, 2600],
+        "stato": "off",
+        "target": "porta_1"
+    },
+    "trappola_1":{
+        "tipo": "trappola",
+        "img": 61,
+        "sottotipo": "trappola_A",
+        "stato": "on",
+        "pos": [1000, 2900]
+    },
+    "iscrizione_1":{
+        "tipo": "iscrizione",
+        "img": 3,
+        "pos": [700, 2100],
+        "testo": "Ciao"
+    },
+    "ostacolo_1":{
+        "tipo": "ostacolo",
+        "img": 56,
+        "sottotipo": "ostacolo_A",
+        "pos": [1000, 1950],
+        "stato": "on"
+    },
+    "leva_2":{
+        "tipo": "leva",
+        "img": 86,
+        "pos": [850, 1650],
+        "stato": "off",
+        "target": "ostacolo_1"
+    },
+    "cassa_1":{
+        "tipo": "cassa",
+        "img": 45,
+        "pos": [10, 50],
+        "stato": "chiusa",
+        "chiave": "chiave_1"
+    },
+    "chiave_1":{
+        "tipo": "chiave",
+        "img": 74,
+        "pos": [5, 6]
+    },
+    "oggetto_1":{
+        "tipo": "oggetto",
+        "img": 60,
+        "sottotipo": "arma_1",
+        "pos": [4, 2]
+    }
+}

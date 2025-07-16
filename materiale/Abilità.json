@@ -1,0 +1,481 @@
+[
+  {
+    "LV": "M",
+    "descrizione": "Passiva, consente di combattere con armi o a mani nude",
+    "figli": [
+      {
+        "nome": "Combattimento con armi in mischia",
+        "descrizione": "Passiva, bonus a tutti i coefficienti di combattimento",
+        "LV": "F",
+        "figli": [
+          {
+            "nome": "Addestramento con lame lunghe",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Affondo",
+              "descrizione": "Bonus al danno e per colpire, malus velocità d'attacco",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento con lame corte",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Colpo nelle ombre",
+              "descrizione": "Bonus al danno e per colpire, 1 per combattimento",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento con le aste",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Attacco e difesa",
+              "descrizione": "Malus per colpire e velocità d’attacco, bonus difesa",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento con asce",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Colpo ampio",
+              "descrizione": "Malus velocità d’attacco, affaticamento e per colpire, attacco emanazione 1",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento con le mazze",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Colpo in salto",
+              "descrizione": "Malus velocità d’attacco, affaticamento e per colpire, bonus al danno",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Professionista",
+            "LV": "I",
+            "descrizione": "Passiva, bonus a tutti i coefficienti di combattimento",
+            "figli": {
+              "nome": "Pro",
+              "descrizione": "Bonus velocità, malus affaticamento",
+              "LV": "II",
+              "figli": [
+                {
+                  "nome": "Colpo veloce",
+                  "descrizione": "Bonus velocità, malus affaticamento",
+                  "LV": "III",
+                  "figli": [
+                    {
+                      "nome": "Colpo veloce II",
+                      "descrizione": "Aumento bonus Colpo veloce",
+                      "LV": "IV",
+                      "figli": [
+                        {
+                          "nome": "Colpo inesorabile",
+                          "descrizione": "Aumento probabilità per colpire",
+                          "LV": "V",
+                          "figli": [
+                            {
+                              "nome": "Maestria",
+                              "descrizione": "Passiva, bonus affaticamento, al danno e al danno critico",
+                              "LV": "VI"
+                            }
+                          ]
+                        },
+                        {
+                          "nome": "Combattimento con due armi",
+                          "descrizione": "Può effettuare due attacchi contemporanei con due armi differenti",
+                          "LV": "V"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "nome": "Affondo potente",
+                  "descrizione": "Bonus al danno e per colpire, malus velocità d'attacco",
+                  "LV": "III",
+                  "figli": [
+                    {
+                      "nome": "Colpo stordente",
+                      "descrizione": "Malus al danno, il nemico viene stordito se colpito",
+                      "LV": "IV",
+                      "figli": [
+                        {
+                          "nome": "Colpo devastante",
+                          "descrizione": "Bonus al danno, malus all'affaticamento",
+                          "LV": "V"
+                        }
+                      ]
+                    },
+                    {
+                      "nome": "Colpo alto critico",
+                      "descrizione": "Bonus al danno critico",
+                      "LV": "IV",
+                      "figli": [
+                        {
+                          "nome": "Colpo alto critico II",
+                          "descrizione": "Miglioramento statistiche Colpo alto critico",
+                          "LV": "V"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "nome": "Colpo difensivo",
+                  "descrizione": "Bonus alla difesa, malus per colpire",
+                  "LV": "III",
+                  "figli": [
+                    {
+                      "nome": "Colpo difensivo II",
+                      "descrizione": "Miglioramento statistiche  Colpo difensivo",
+                      "LV": "IV"
+                    },
+                    {
+                      "nome": "Colpo disarmante",
+                      "descrizione": "Malus per colpire, infligge un malus alla velocità al nemico",
+                      "LV": "IV"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "nome": "Combattimento a distanza",
+        "descrizione": "Passiva, bonus a tutti i coefficienti di combattimento",
+        "LV": "F",
+        "figli": [
+          {
+            "nome": "Addestramento con arco",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Colpo preciso",
+              "descrizione": "Bonus per colpire, malus velocità d'attacco",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento con balestra",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Ricarica veloce",
+              "descrizione": "Bonus velocità d'attacco, malus per colpire",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Addestramento armi da lancio",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Attacco potente",
+              "descrizione": "Bonus al danno, malus velocità d'attacco",
+              "LV": "II"
+            }
+          },
+          {
+            "nome": "Cecchino",
+            "LV": "I",
+            "descrizione": "Passiva, bonus per colpire e a velocità d’attacco",
+            "figli": {
+              "nome": "Maestro",
+              "descrizione": "Passiva, bonus critico e danno critico",
+              "LV": "II",
+              "figli": [
+                {
+                  "nome": "forza nel tiro",
+                  "descrizione": "passiva, aumenta la gittata",
+                  "LV": "III"
+                },
+                {
+                  "nome": "allenamento fisico",
+                  "descrizione": "passiva, bonus affaticamento",
+                  "LV": "III",
+                  "figli": [
+                    {
+                      "nome": "allenamento fisico II",
+                      "descrizione": "passiva, aumento bonus allenamento fisico",
+                      "LV": "IV"
+                    }
+                  ]
+                },
+                {
+                  "nome": "occhio di falco",
+                  "descrizione": "ignora l'armatura, malus velocità",
+                  "LV": "III",
+                  "figli": [
+                    {
+                      "nome": "punti vitali",
+                      "descrizione": "bonus critico",
+                      "LV": "IV",
+                      "figli": [
+                        {
+                          "nome": "doppio colpo",
+                          "descrizione": "lancia due frecce in sequenza provocando il doppio dei danni",
+                          "LV": "V",
+                          "figli": [
+                            {
+                              "nome": "ultimo",
+                              "descrizione": "passivo, bonus a tutte le statistiche",
+                              "LV": "VI"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "nome": "colpo intralciante",
+                      "descrizione": "provoca malus velocità",
+                      "LV": "IV"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "nome": "Combattimento con corazza",
+        "descrizione": "Passiva, evita il malus per colpire e al danno se si indossa una corazza",
+        "LV": "F",
+        "figli": [
+          {
+            "nome": "parata",
+            "LV": "I",
+            "descrizione": "bonus alla difesa",
+            "figli": [
+              {
+                "nome": "difesa pronta",
+                "LV": "II",
+                "descrizione": "Passiva, bonus a tutte le statistiche di difesa",
+                "figli": [
+                  {
+                    "nome": "Resistenza",
+                    "LV": "III",
+                    "descrizione": "Passiva, riduce l'affaticamento in difesa",
+                    "figli": [
+                      {
+                        "nome": "difesa totale",
+                        "LV": "IV",
+                        "descrizione": "Passiva, bonus alla difesa ed evita di essere storditi"
+                      }
+                    ]
+                  },
+                  {
+                    "nome": "difesa pronta II",
+                    "LV": "III",
+                    "descrizione": "Passiva, aumenta i bonus di Difesa pronta",
+                    "figli": [
+                      {
+                        "nome": "contrattacco",
+                        "LV": "IV",
+                        "descrizione": "Bonus per colpire e alla velocità",
+                        "figli": [
+                          {
+                            "nome": "difesa agile",
+                            "LV": "V",
+                            "descrizione": "Passiva, bonus per non essere colpiti",
+                            "figli": [{
+                              "nome": "difesa totale",
+                              "LV": "V",
+                              "descrizione": "Il prossimo colpo non si è colpiti",
+                              "figli": [
+                                {
+                                  "nome": "attacco riflesso",
+                                  "LV": "VI",
+                                  "descrizione": "L'avversario subisce il danno causato a noi"
+                                }
+                              ]
+                            }]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "nome": "difesa con scudo",
+                "LV": "II",
+                "descrizione": "Passiva, evita malus per colpire e al danno se uso uno scudo",
+                "figli": [
+                  {
+                    "nome": "attacco con scudo",
+                    "LV": "III",
+                    "descrizione": "Il nemico viene stordito",
+                    "figli": [
+                      {
+                        "nome": "difesa e attacco",
+                        "LV": "IV",
+                        "descrizione": "Consente di fare anche un attacco mentre si difende"
+                      }
+                    ]
+                  },
+                  {
+                    "nome": "difesa con scudo II",
+                    "LV": "III",
+                    "descrizione": "Passiva, aumenta la difesa dovuta allo scudo",
+                    "figli": [
+                      {
+                        "nome": "allenamento con scudo",
+                        "LV": "IV",
+                        "descrizione": "Passiva, riduce l'affaticamentio dovuto allo scudo"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nome": "Combattimento a mani nude",
+        "LV": "F",
+        "descrizione": "consente di attaccare senza armi",
+        "figli": [
+          {
+            "nome": "lotta",
+            "LV": "I",
+            "descrizione": "Bonus a tutte le statistiche",
+            "figli": [
+              {
+                "nome": "colpo potente",
+                "LV": "II",
+                "descrizione": "aumenta la forza ma diminuisce la velocità",
+                "figli": [
+                  {
+                    "nome": "colpo stordente",
+                    "LV": "III",
+                    "descrizione": "Stordisce l'avversario",
+                    "figli": [
+                      {
+                        "nome": "Colpo potente II",
+                        "LV": "IV",
+                        "descrizione": "Aumenta il bonus di colpo potente"
+                      }
+                    ]
+                  },
+                  {
+                    "nome": "allenamento forza",
+                    "LV": "III",
+                    "descrizione": "Passiva, aumenta la forza",
+                    "figli": [
+                      {
+                        "nome": "allenamento critico",
+                        "LV": "IV",
+                        "descrizione": "Aumenta il critico e il danno critico"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "nome": "colpo veloce",
+                "LV": "II",
+                "descrizione": "aumenta la velocità ma diminuisce la probabilità di colpire",
+                "figli": [
+                  {
+                    "nome": "colpo di difesa",
+                    "LV": "III",
+                    "descrizione": "Passiva, se non colpito consente di attaccare",
+                    "figli": [
+                      {
+                        "nome": "rompi difesa",
+                        "LV": "IV",
+                        "descrizione": "Diminuisce la difesa dell'avversario",
+                        "figli": [
+                          {
+                            "nome": "attacco multiplo",
+                            "LV": "V",
+                            "descrizione": "Attacco emanazione 1",
+                            "figli": [
+                              {
+                                "nome": "colpo letale",
+                                "LV": "VI",
+                                "descrizione": "critico sicuro"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "nome": "allenamento",
+                "LV": "II",
+                "descrizione": "Passiva, diminuisce l'affaticamento",
+                "figli": [
+                  {
+                    "nome": "allenamento II",
+                    "LV": "III",
+                    "descrizione": "Passiva, diminuisce ulteriorrmente l'affaticamento",
+                    "figli": [
+                      {
+                        "nome": "allenamento III",
+                        "LV": "IV",
+                        "descrizione": "Passiva, diminuisce ulteriorrmente l'affaticamento"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "nome": "difesa",
+                "LV": "II",
+                "descrizione": "Passiva, aumenta la difesa",
+                "figli": [
+                  {
+                    "nome": "difesa sbilanciante",
+                    "LV": "III",
+                    "descrizione": "L'avversrio salta il prossimo attacco",
+                    "figli": [
+                      {
+                        "nome": "difesa II",
+                        "LV": "IV",
+                        "descrizione": "Passiva aumenta la difesa",
+                        "figli": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nome": "Psicologia",
+    "LV": "M"
+  },
+  {
+    "nome": "Abilità arcane",
+    "LV": "M"
+  },
+  {
+    "nome": "Fede",
+    "LV": "M"
+  },
+  {
+    "nome": "Natura",
+    "LV": "M"
+  }
+]

@@ -1,0 +1,10 @@
+{
+    "#000000":{
+        "type":6,
+        "muro":true
+    },
+    "#FFFFFF":{
+        "type":10,
+        "muro":false
+    }
+}
