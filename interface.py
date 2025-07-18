@@ -1,11 +1,22 @@
 import pygame
 
+from core import GSprite
 from screen import Screen
 
 
-class Interfaccia:
+class Interface:
 
-    def __init__(self, screen:Screen):
+    screen: Screen
+    sprite_set: pygame.sprite.Group
+    menu: GSprite
+    party_info: GSprite
+    mission_info: GSprite
+    characters: GSprite
+    gaming_area: GSprite
+    minimap: GSprite
+    dialog: GSprite
+
+    def __init__(self, screen: Screen):
         self.screen = screen
         self.sprite_set = pygame.sprite.Group()
         self.menu = Menu(self.sprite_set, self.screen)
@@ -16,7 +27,7 @@ class Interfaccia:
         self.minimap = Minimap(self.sprite_set, self.screen)
         self.dialog = Dialog(self.sprite_set, self.screen)
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         for sprite in self.sprite_set:
             sprite.update(resize)
 
@@ -24,18 +35,19 @@ class Interfaccia:
         for sprite in self.sprite_set:
             sprite.draw()
 
-#todo parametrizzare dimensioni interfaccia
+
+# todo parametrizzare dimensioni interfaccia
 
 
-class Menu(pygame.sprite.Sprite):
+class Menu(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -43,7 +55,7 @@ class Menu(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 5
         h = 80
         x = 10
@@ -66,15 +78,15 @@ class Menu(pygame.sprite.Sprite):
         self.image.blit(background, (x, y))
 
 
-class PartyInfo(pygame.sprite.Sprite):
+class PartyInfo(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -82,7 +94,7 @@ class PartyInfo(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 5 * 2
         h = 80
         x = (self.screen.screen_info.current_w - 20) // 5 + 10
@@ -91,7 +103,6 @@ class PartyInfo(pygame.sprite.Sprite):
 
     def draw(self):
         self.image.fill((0, 0, 0, 0))
-        #pygame.draw.rect(self.image, (0, 0, 0), self.image.get_rect(), 3)
         background = pygame.image.load("assets/background2.png").convert_alpha()
         tile_w, tile_h = background.get_size()
         surf_w, surf_h = self.image.get_size()
@@ -100,15 +111,15 @@ class PartyInfo(pygame.sprite.Sprite):
                 self.image.blit(background, (x, y))
 
 
-class MissionInfo(pygame.sprite.Sprite):
+class MissionInfo(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -116,7 +127,7 @@ class MissionInfo(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 5 * 2
         h = 80
         x = (self.screen.screen_info.current_w - 20) // 5 * 3 + 10
@@ -125,7 +136,6 @@ class MissionInfo(pygame.sprite.Sprite):
 
     def draw(self):
         self.image.fill((0, 0, 0, 0))
-        #pygame.draw.rect(self.image, (0, 0, 0), self.image.get_rect(), 3)
         background = pygame.image.load("assets/background2.png").convert_alpha()
         tile_w, tile_h = background.get_size()
         surf_w, surf_h = self.image.get_size()
@@ -134,15 +144,15 @@ class MissionInfo(pygame.sprite.Sprite):
                 self.image.blit(background, (x, y))
 
 
-class Characters(pygame.sprite.Sprite):
+class Characters(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -150,7 +160,7 @@ class Characters(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 5
         h = (self.screen.screen_info.current_h - 20) - 90
         x = 10
@@ -159,18 +169,17 @@ class Characters(pygame.sprite.Sprite):
 
     def draw(self):
         self.image.fill((0, 0, 0, 0))
-        #pygame.draw.rect(self.image, (0, 0, 0), self.image.get_rect(), 3)
 
 
-class GamingArea(pygame.sprite.Sprite):
+class GamingArea(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -178,27 +187,28 @@ class GamingArea(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 5 * 4
         h = (self.screen.screen_info.current_h - 20) - 80
-        x = (self.screen.screen_info.current_w -  20) // 5 + 10
+        x = (self.screen.screen_info.current_w - 20) // 5 + 10
         y = 90
         return w, h, x, y
 
     def draw(self):
         self.image.fill((0, 0, 0, 0))
 
-#todo il testo deve andare a capo
-class Dialog(pygame.sprite.Sprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+# todo il testo deve andare a capo
+class Dialog(GSprite):
+
+    screen: Screen
+
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
-        self.rect = None
-        self.image = None
-        self.text = ''
+        self.text = ""
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -206,7 +216,7 @@ class Dialog(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 2
         h = 150
         x = (self.screen.screen_info.current_w - 20) // 20 * 7 + 10
@@ -224,15 +234,15 @@ class Dialog(pygame.sprite.Sprite):
             y += 30
 
 
-class Minimap(pygame.sprite.Sprite):
+class Minimap(GSprite):
 
-    def __init__(self, group:pygame.sprite.Group, screen:Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: Screen):
         super().__init__(group)
         self.screen = screen
         self.rect = None
         self.image = None
 
-    def update(self, resize:bool):
+    def update(self, resize: bool):
         if resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -240,9 +250,9 @@ class Minimap(pygame.sprite.Sprite):
             self.rect.x = x
             self.rect.y = y
 
-    def calculate(self)->tuple[int, int, int, int]:
+    def calculate(self) -> tuple[int, int, int, int]:
         w = (self.screen.screen_info.current_w - 20) // 6
-        h = w // 4 * 3 #todo le mappe quindi hanno queste proporzioni?
+        h = w // 4 * 3  # todo le mappe non possono avere tutte queste proporzioni
         x = (self.screen.screen_info.current_w - 20) - w + 10
         y = 90
         return w, h, x, y

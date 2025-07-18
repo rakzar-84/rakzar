@@ -1,10 +1,22 @@
-import pygame
 import traceback
+
+import pygame
 
 import state
 
 
-def draw_error(screen:pygame.surface.Surface, e:Exception):
+class GSprite(pygame.sprite.Sprite):
+
+    image: pygame.Surface
+    rect: pygame.Rect
+
+    def __init__(self, group: pygame.sprite.Group):
+        super().__init__(group)
+        self.image = None
+        self.rect = None
+
+
+def draw_error(screen: pygame.surface.Surface, e: Exception):
     if screen:
         screen.fill((0, 0, 0))
         y = 10

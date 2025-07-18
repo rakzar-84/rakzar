@@ -1,23 +1,33 @@
-import pygame
-
+from core import GSprite
 from map import Map
 
 
 class Camera:
 
-    def __init__(self, target:pygame.sprite.Sprite, area:pygame.sprite.Sprite, mappa:Map):
+    target: GSprite
+    scene: GSprite
+    width: int
+    height: int
+    map_w: int
+    map_h: int
+    x: int
+    y: int
+
+    def __init__(self, target: GSprite, scene: GSprite, map: Map):
         self.target = target
-        self.area = area
-        self.mappa = mappa
-        self.width = 0
-        self.height = 0
+        self.scene = scene
+        self.width = scene.rect.width
+        self.height = scene.rect.height
+        self.map_w = map.width
+        self.map_h = map.height
         self.x = 0
         self.y = 0
 
-    def update(self):
-        self.width = self.area.rect.width
-        self.height = self.area.rect.height
-        self.x = max(self.width//2, self.target.rect.centerx)
-        self.y = max(self.height//2, self.target.rect.centery)
-        self.x = min(self.x, self.mappa.width-self.width//2)
-        self.y = min(self.y, self.mappa.height-self.height//2)
+    def update(self, resize: bool):
+        if resize:
+            self.width = self.scene.rect.width
+            self.height = self.scene.rect.height
+        self.x = max(self.width // 2, self.target.rect.centerx)
+        self.y = max(self.height // 2, self.target.rect.centery)
+        self.x = min(self.x, self.map_w - self.width // 2)
+        self.y = min(self.y, self.map_h - self.height // 2)

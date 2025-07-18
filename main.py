@@ -1,17 +1,18 @@
 import json
-import pygame
 import sys
 import traceback
 
-from  errors import draw_error
+import pygame
+
 import state
-from screen import Screen
+from core import draw_error
 from loop import Loop
+from screen import Screen
 
 db = None
 screen = None
 try:
-    with open('config.json', 'r', encoding='utf-8') as file:
+    with open("config.json", "r", encoding="utf-8") as file:
         state.config = json.load(file)
     pygame.init()
     screen = Screen()
@@ -21,7 +22,7 @@ try:
     loop.execute()
 except Exception as e:
     print(traceback.format_exc())
-    draw_error(screen.surface, e)
+    draw_error(screen.image, e)
     waiting = True
     while waiting:
         for event in pygame.event.get():
