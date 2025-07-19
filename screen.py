@@ -13,6 +13,7 @@ class Screen:
         self.screen_info = None
 
     def init(self):
+        self.screen_info = pygame.display.Info()
         pygame.display.set_caption(
             state.config["nome"] + " - v. " + state.config["versione"]
         )
@@ -33,8 +34,8 @@ class Screen:
         if self.image is None or not bool(self.image.get_flags() & pygame.FULLSCREEN):
             self.image = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             self.screen_info = pygame.display.Info()
 
     def draw(self):

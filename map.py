@@ -14,13 +14,14 @@ if TYPE_CHECKING:
 
 class Map:
 
-    TILE_SIZE = 50  # todo parametrizzare
+    TILE_SIZE = state.config["tile_size"]
 
     blocchi_x: int
     blocchi_y: int
     width: int
     height: int
     tiled_map: list
+    start: tuple
     tiles_images: list
     tiles_types: dict
     items: dict
@@ -32,6 +33,7 @@ class Map:
         self.blocchi_x = 0
         self.blocchi_y = 0
         self.tiled_map = []
+        self.start = (0, 0)
         self.tiles_images = []
         self.tiles_types = {}
         self.items = {}
@@ -65,6 +67,8 @@ class Map:
                     colore = Counter(pixel_data).most_common(1)[0][0]
                     hex = "#{:02X}{:02X}{:02X}".format(*colore)
                     riga.append(self.tiles_types[hex])
+                    if hex == "#404040":
+                        self.start = (bx, by)
                 self.tiled_map.append(riga)
             self.load_items()
             self.load_mostri()

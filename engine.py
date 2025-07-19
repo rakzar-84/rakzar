@@ -41,11 +41,13 @@ class Engine:
         self.player = player
         self.gaming_area = gamin_area
 
-    def run(self, resize: bool):
-        self.move_player(resize)
-        self.load_visible_area(self.camera, self.player)
+    def run(self):
+        self.move_player()
+        self.load_visible_area()
 
-    def move_player(self, resize: bool):
+    def move_player(self):
+        newx = self.player.rect.centerx
+        newy = self.player.rect.centery
         if state.keys[pygame.K_LEFT]:
             newx = self.player.rect.centerx - self.player.info["razza"]["velocita"]
             newx = max(0, newx)
@@ -58,7 +60,7 @@ class Engine:
         if state.keys[pygame.K_DOWN]:
             newy = self.player.rect.centery + self.player.info["razza"]["velocita"]
             newy = min(newy, self.map.height - Map.TILE_SIZE)
-        self.player.move(resize, newx, newy)
+        self.player.move(newx, newy)
 
     def go_back_player(self):
         newx = round(self.player.back[0] / (Map.TILE_SIZE // 2)) * (Map.TILE_SIZE // 2)
@@ -93,19 +95,19 @@ class Engine:
                     else:
                         self.visible_path.add(tile)
                 for item in self.map.items.values():
-                    item_tile_x = item.rect.x // Map.TILE_SIZE
-                    item_tile_y = item.rect.y // Map.TILE_SIZE
+                    image = self.map.tiles_images[item["img"]]
+                    rect = image.get_rect()
+                    item_tile_x = rect.x // Map.TILE_SIZE
+                    item_tile_y = rect.y // Map.TILE_SIZE
                     if x == item_tile_x and y == item_tile_y:
-                        self.visible_items.add(
-                            Item(id, item, self.map.tiles_images[item["img"]])
-                        )
+                        self.visible_items.add(Item(id, item, image, rect))
                 for monster in self.map.monsters.values():
-                    monster_tile_x = monster.rect.x // Map.TILE_SIZE
-                    monster_tile_y = monster.rect.y // Map.TILE_SIZE
+                    monster_sprite = Monster(self.db, id)
+                    monster_sprite.load(monster)
+                    monster_tile_x = monster_sprite.rect.x // Map.TILE_SIZE
+                    monster_tile_y = monster_sprite.rect.y // Map.TILE_SIZE
                     if x == monster_tile_x and y == monster_tile_y:
-                        monster_sprite = Monster(self.db, id)
-                        monster_sprite.load(monster)
-                        self.move_monster(monster)
+                        self.move_monster(monster_sprite)
                         self.visible_monsters.add(monster_sprite)
 
     # todo aggiustare:
@@ -116,6 +118,7 @@ class Engine:
         last_target = None
         nop = 0
         path = []
+        # qui
         if (
             self.distance(monster.rect.center, self.player.rect.center)
             <= monster.raggio_vista

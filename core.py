@@ -10,8 +10,8 @@ class GSprite(pygame.sprite.Sprite):
     image: pygame.Surface
     rect: pygame.Rect
 
-    def __init__(self, group: pygame.sprite.Group):
-        super().__init__(group)
+    def __init__(self, *groups: pygame.sprite.Group):
+        super().__init__(groups)
         self.image = None
         self.rect = None
 

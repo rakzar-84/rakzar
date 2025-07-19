@@ -22,7 +22,6 @@ class Loop:
     player: Player
     engine: Engine
     error: Exception
-    resize: bool
 
     def __init__(self, screen: Screen):
         self.screen = screen
@@ -33,8 +32,6 @@ class Loop:
         self.player = None
         self.engine = None
         self.error = None
-        # todo è solo un'inormazione trasmessa da un metodo ad un altro, va bene?
-        self.resize = True
 
     def init(self):
         self.clock = pygame.time.Clock()
@@ -43,13 +40,13 @@ class Loop:
         self.map = Map()
         self.map.load_map()
         self.interface = Interface(self.screen)
+        self.interface.update(True)
         self.player = Player(db)
-        self.player.load(self.map.width, self.map.height)
+        self.player.load(self.map.start)
         self.camera = Camera(self.player, self.interface.gaming_area, self.map)
         self.player.camera = self.camera
-        self.engine.init(
-            db, self.map, self.camera, self.player, self.interface.gaming_area
-        )
+        self.engine = Engine(db)
+        self.engine.init(self.map, self.camera, self.player, self.interface.gaming_area)
 
     def execute(self):
         state.running = 1
@@ -78,17 +75,17 @@ class Loop:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.screen.to_window()
-                    self.resize = True
+                    state.resize = True
                 elif event.key == pygame.K_F12:
                     self.screen.to_fullscreen()
-                    self.resize = True
+                    state.resize = True
                 elif event.key == pygame.K_SPACE:
                     if state.running == 1:
                         state.running = 2
                     else:
                         state.running = 1
             if event.type == pygame.VIDEORESIZE:
-                self.resize = True
+                state.resize = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 state.mouse["pos"] = event.pos
                 if event.button == 1:
@@ -99,10 +96,10 @@ class Loop:
                 state.running = 0
 
     def update(self):
-        self.screen.update(self.resize)
-        self.interface.update(self.resize)
-        self.engine.run(self.resize)
-        self.resize = False
+        self.screen.update()
+        self.interface.update()
+        self.engine.run()
+        state.resize = False
 
     def do_interaction(self):  # qui
         collisi = pygame.sprite.spritecollide(self.player, self.map.visible_wall, False)

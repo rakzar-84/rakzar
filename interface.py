@@ -1,5 +1,6 @@
 import pygame
 
+import state
 from core import GSprite
 from screen import Screen
 
@@ -27,16 +28,13 @@ class Interface:
         self.minimap = Minimap(self.sprite_set, self.screen)
         self.dialog = Dialog(self.sprite_set, self.screen)
 
-    def update(self, resize: bool):
+    def update(self):
         for sprite in self.sprite_set:
-            sprite.update(resize)
+            sprite.update()
 
     def draw(self):
         for sprite in self.sprite_set:
             sprite.draw()
-
-
-# todo parametrizzare dimensioni interfaccia
 
 
 class Menu(GSprite):
@@ -47,8 +45,10 @@ class Menu(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self, resize: bool):
-        if resize:
+    def update(
+        self,
+    ):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -56,10 +56,14 @@ class Menu(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5
-        h = 80
-        x = 10
-        y = 10
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["left"]
+        h = state.config["interfaccia"]["top"]
+        x = state.config["interfaccia"]["cornice"]
+        y = state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -86,8 +90,8 @@ class PartyInfo(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -95,10 +99,17 @@ class PartyInfo(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5 * 2
-        h = 80
-        x = (self.screen.screen_info.current_w - 20) // 5 + 10
-        y = 10
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["patyinfo"]
+        h = state.config["interfaccia"]["top"]
+        x = (
+            area_w // state.config["interfaccia"]["menu"]
+            + state.config["interfaccia"]["cornice"]
+        )
+        y = state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -119,8 +130,8 @@ class MissionInfo(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -128,10 +139,18 @@ class MissionInfo(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5 * 2
-        h = 80
-        x = (self.screen.screen_info.current_w - 20) // 5 * 3 + 10
-        y = 10
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["missione"]
+        h = state.config["interfaccia"]["top"]
+        left = (
+            state.config["interfaccia"]["left"]
+            + state.config["interfaccia"]["patyinfo"]
+        )
+        x = area_w * left + state.config["interfaccia"]["cornice"]
+        y = state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -152,8 +171,8 @@ class Characters(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -161,10 +180,22 @@ class Characters(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5
-        h = (self.screen.screen_info.current_h - 20) - 90
-        x = 10
-        y = 80
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        area_h = (
+            self.screen.screen_info.current_h
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["left"]
+        h = (
+            area_h
+            - state.config["interfaccia"]["cornice"]
+            - state.config["interfaccia"]["top"]
+        )
+        x = state.config["interfaccia"]["cornice"]
+        y = state.config["interfaccia"]["left"]
         return w, h, x, y
 
     def draw(self):
@@ -179,8 +210,8 @@ class GamingArea(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -188,10 +219,21 @@ class GamingArea(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 5 * 4
-        h = (self.screen.screen_info.current_h - 20) - 80
-        x = (self.screen.screen_info.current_w - 20) // 5 + 10
-        y = 90
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        area_h = (
+            self.screen.screen_info.current_h
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * (1 - state.config["interfaccia"]["left"])
+        h = area_h - state.config["interfaccia"]["top"]
+        x = (
+            area_w * state.config["interfaccia"]["left"]
+            + state.config["interfaccia"]["cornice"]
+        )
+        y = state.config["interfaccia"]["left"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -208,8 +250,8 @@ class Dialog(GSprite):
         self.screen = screen
         self.text = ""
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -217,14 +259,32 @@ class Dialog(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 2
-        h = 150
-        x = (self.screen.screen_info.current_w - 20) // 20 * 7 + 10
-        y = (self.screen.screen_info.current_h - 20) - 150 + 10
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        area_h = (
+            self.screen.screen_info.current_h
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["dialogw"]
+        h = state.config["interfaccia"]["dialogh"]
+        offset = (
+            1
+            - state.config["interfaccia"]["left"]
+            * (1 - state.config["interfaccia"]["dialogw"])
+            // 2
+        )
+        x = area_w * offset + state.config["interfaccia"]["cornice"]
+        y = (
+            area_h
+            - state.config["interfaccia"]["dialogh"]
+            + state.config["interfaccia"]["cornice"]
+        )
         return w, h, x, y
 
     def draw(self):
-        self.image.fill((0, 0, 0, 200))
+        self.image.fill((0, 0, 0, state.config["interfaccia"]["dialoga"]))
         pygame.draw.rect(self.image, (0, 0, 0), self.image.get_rect(), 3)
         y = 10
         font = pygame.font.SysFont(None, 24)
@@ -242,8 +302,8 @@ class Minimap(GSprite):
         self.rect = None
         self.image = None
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
             self.rect = self.image.get_rect()
@@ -251,12 +311,16 @@ class Minimap(GSprite):
             self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        w = (self.screen.screen_info.current_w - 20) // 6
+        area_w = (
+            self.screen.screen_info.current_w
+            - state.config["interfaccia"]["cornice"] * 2
+        )
+        w = area_w * state.config["interfaccia"]["minimap"]
         h = w // 4 * 3  # todo le mappe non possono avere tutte queste proporzioni
-        x = (self.screen.screen_info.current_w - 20) - w + 10
-        y = 90
+        x = area_w - w + state.config["interfaccia"]["cornice"]
+        y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
-        self.image.fill((0, 0, 0, 100))
+        self.image.fill((0, 0, 0, state.config["interfaccia"]["minimapa"]))
         pygame.draw.rect(self.image, (0, 0, 0), self.image.get_rect(), 3)

@@ -25,16 +25,18 @@ class Monster(GSprite):
 
     def load(self, info: dict):
         try:
-            # todo l'immagine deve essere legata al mostro
             # todo le dimensioni del tile sono variabili
-            self.image = pygame.image.load("assets/monster.png").convert_alpha()
-            self.rect = self.image.get_rect()
-            self.rect.x = info["pos"][0]
-            self.rect.y = info["pos"][1]
             # todo insrire mostri
             # self.info = self.db.getOne("SELECT *
             # FROM personaggi
             # WHERE id = " + str(info["id"]))
+            # todo l'immagine deve essere legata al mostro
+            self.image = pygame.image.load(
+                "assets/personaggi/monster.png"
+            ).convert_alpha()
+            self.rect = self.image.get_rect()
+            self.rect.x = info["pos"][0]
+            self.rect.y = info["pos"][1]
             # razza = self.db.getOne("SELECT *
             # FROM razze
             # WHERE id = " + str(info["id"]))

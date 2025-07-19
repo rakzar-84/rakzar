@@ -1,3 +1,4 @@
+import state
 from core import GSprite
 from map import Map
 
@@ -23,8 +24,8 @@ class Camera:
         self.x = 0
         self.y = 0
 
-    def update(self, resize: bool):
-        if resize:
+    def update(self):
+        if state.resize:
             self.width = self.scene.rect.width
             self.height = self.scene.rect.height
         self.x = max(self.width // 2, self.target.rect.centerx)

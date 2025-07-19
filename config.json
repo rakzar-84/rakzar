@@ -5,6 +5,19 @@
     "fullscreen": true,
     "db":"rakzar.db",
     "mappa":"mappe/default/",
-    "personaggio":1,
+    "interfaccia":{
+        "cornice": 10,
+        "top": 80,
+        "left": 0.2,
+        "patyinfo": 0.4,
+        "missione": 0.4,
+        "dialogh": 150,
+        "dialogw": 0.8,
+        "dialoga": 200,
+        "minimap": 0.15,
+        "minimapa": 200
+
+    },
+    "tile_size": 50,
     "debug":true
 }

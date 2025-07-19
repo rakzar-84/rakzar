@@ -5,10 +5,10 @@ from core import GSprite
 
 class Item(GSprite):
 
-    def __init__(self, id: str, data: dict, image: pygame.Surface):
+    def __init__(self, id: str, data: dict, image: pygame.Surface, rect: pygame.Rect):
         super().__init__()
         self.image = image
-        self.rect = self.image.get_rect()
+        self.rect = rect
         self.rect.x = data["pos"][0]
         self.rect.y = data["pos"][1]
         self.id = id

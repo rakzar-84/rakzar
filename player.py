@@ -4,7 +4,8 @@ import state
 from camera import Camera
 from core import GSprite
 from db import Db
-from map import Item, Map
+from item import Item
+from map import Map
 
 
 class Player(GSprite):
@@ -27,20 +28,20 @@ class Player(GSprite):
         self.equipment = []
         self.abilities = []
 
-    def load(self, width: int, height: int):
+    def load(self, start: tuple):
         try:
-            # todo l'immagine deve essere legata al personaggio
-            self.image = pygame.image.load("assets/player.png").convert_alpha()
+            # todo più di un immagine
+            self.image = pygame.image.load(
+                "assets/personaggi/player.png"
+            ).convert_alpha()
             self.rect = self.image.get_rect(
-                center=(width // 2, height // 2)
-            )  # todo non qui
-            self.back = self.rect.center
-            # todo il personaggio non può satere in configurazione;
-            #   dove metterlo finché non c'è il save/load?
-            self.info = self.db.getOne(
-                "SELECT * FROM personaggi WHERE id = "
-                + str(state.config["personaggio"])
+                center=(
+                    start[0] * (Map.TILE_SIZE // 2),
+                    start[1] * (Map.TILE_SIZE // 2),
+                )
             )
+            self.back = self.rect.center
+            self.info = self.db.getOne("SELECT * FROM personaggi WHERE main = 1")
             razza = self.db.getOne(
                 "SELECT * FROM razze WHERE id = " + str(self.info["razza_id"])
             )
@@ -76,11 +77,11 @@ class Player(GSprite):
         except Exception as e:
             raise RuntimeError("Impossibile caricare personaggio") from e
 
-    def move(self, resize: bool, x: int, y: int):
+    def move(self, x: int, y: int):
         self.back = self.rect.center
         self.rect.centerx = x
         self.rect.centery = y
-        self.camera.update(resize)
+        self.camera.update()
 
     def draw(self, area: pygame.surface.Surface, camera: Camera, mappa: Map):
         if camera.width // 2 < self.rect.centerx < mappa.width - camera.width // 2:
