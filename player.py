@@ -33,11 +33,11 @@ class Player(GSprite):
             # todo più di un immagine
             self.image = pygame.image.load(
                 "assets/personaggi/player.png"
-            ).convert_alpha()
+            ).convert_alpha()  # todo ridimensionare in base alle dimensioni
             self.rect = self.image.get_rect(
                 center=(
-                    start[0] * (Map.TILE_SIZE // 2),
-                    start[1] * (Map.TILE_SIZE // 2),
+                    start[0] * (state.config["tile_size"] // 2),
+                    start[1] * (state.config["tile_size"] // 2),
                 )
             )
             self.back = self.rect.center
@@ -85,13 +85,23 @@ class Player(GSprite):
 
     def draw(self, area: pygame.surface.Surface, camera: Camera, mappa: Map):
         if camera.width // 2 < self.rect.centerx < mappa.width - camera.width // 2:
-            x = area.get_rect().centerx - Map.TILE_SIZE // 2
+            x = area.get_rect().centerx - state.config["tile_size"] // 2
         else:
-            x = self.rect.centerx - camera.x + camera.width // 2 - Map.TILE_SIZE // 2
+            x = (
+                self.rect.centerx
+                - camera.x
+                + camera.width // 2
+                - state.config["tile_size"] // 2
+            )
         if camera.height // 2 < self.rect.centery < mappa.height - camera.height // 2:
-            y = area.get_rect().centery - Map.TILE_SIZE // 2
+            y = area.get_rect().centery - state.config["tile_size"] // 2
         else:
-            y = self.rect.centery - camera.y + camera.height // 2 - Map.TILE_SIZE // 2
+            y = (
+                self.rect.centery
+                - camera.y
+                + camera.height // 2
+                - state.config["tile_size"] // 2
+            )
         area.blit(self.image, (x, y))
 
     def add_item(self, item: Item):

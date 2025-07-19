@@ -40,7 +40,8 @@ class Loop:
         self.map = Map()
         self.map.load_map()
         self.interface = Interface(self.screen)
-        self.interface.update(True)
+        self.interface.update()
+        state.resize = False
         self.player = Player(db)
         self.player.load(self.map.start)
         self.camera = Camera(self.player, self.interface.gaming_area, self.map)

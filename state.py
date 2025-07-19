@@ -1,6 +1,6 @@
 config = {}
 running = 0
-resize = False
+resize = True
 keys = None
 mouse = {}
 vars = {}

@@ -106,7 +106,7 @@ class PartyInfo(GSprite):
         w = area_w * state.config["interfaccia"]["patyinfo"]
         h = state.config["interfaccia"]["top"]
         x = (
-            area_w // state.config["interfaccia"]["menu"]
+            area_w // state.config["interfaccia"]["left"]
             + state.config["interfaccia"]["cornice"]
         )
         y = state.config["interfaccia"]["cornice"]

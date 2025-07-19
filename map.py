@@ -14,8 +14,6 @@ if TYPE_CHECKING:
 
 class Map:
 
-    TILE_SIZE = state.config["tile_size"]
-
     blocchi_x: int
     blocchi_y: int
     width: int
@@ -48,8 +46,8 @@ class Map:
         try:
             immagine = Image.open(state.config["mappa"] + "mappa.png").convert("RGB")
             self.width, self.height = immagine.size
-            self.blocchi_x = self.width // self.TILE_SIZE
-            self.blocchi_y = self.height // self.TILE_SIZE
+            self.blocchi_x = self.width // state.config["tile_size"]
+            self.blocchi_y = self.height // state.config["tile_size"]
             self.load_tiles_images()
             self.load_tiles_type()
             for by in range(self.blocchi_y):
@@ -57,10 +55,10 @@ class Map:
                 for bx in range(self.blocchi_x):
                     blocco = immagine.crop(
                         (
-                            bx * self.TILE_SIZE,
-                            by * self.TILE_SIZE,
-                            (bx + 1) * self.TILE_SIZE,
-                            (by + 1) * self.TILE_SIZE,
+                            bx * state.config["tile_size"],
+                            by * state.config["tile_size"],
+                            (bx + 1) * state.config["tile_size"],
+                            (by + 1) * state.config["tile_size"],
                         )
                     )
                     pixel_data = list(blocco.getdata())
@@ -80,16 +78,16 @@ class Map:
             "RGB"
         )
         w, h = pil_immagine.size
-        tiles_x = w // self.TILE_SIZE
-        tiles_y = h // self.TILE_SIZE
+        tiles_x = w // state.config["tile_size"]
+        tiles_y = h // state.config["tile_size"]
         immagine = pygame.image.fromstring(
             pil_immagine.tobytes(), pil_immagine.size, pil_immagine.mode
         )
         for index in range(tiles_x * tiles_y):
-            x = (index % tiles_x) * self.TILE_SIZE
-            y = (index // tiles_x) * self.TILE_SIZE
+            x = (index % tiles_x) * state.config["tile_size"]
+            y = (index // tiles_x) * state.config["tile_size"]
             tile_img = immagine.subsurface(
-                pygame.Rect(x, y, self.TILE_SIZE, self.TILE_SIZE)
+                pygame.Rect(x, y, state.config["tile_size"], state.config["tile_size"])
             ).copy()
             self.tiles_images.append(tile_img)
 

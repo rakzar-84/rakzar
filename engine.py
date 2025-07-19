@@ -53,18 +53,22 @@ class Engine:
             newx = max(0, newx)
         if state.keys[pygame.K_RIGHT]:
             newx = self.player.rect.centerx + self.player.info["razza"]["velocita"]
-            newx = min(newx, self.map.width - Map.TILE_SIZE)
+            newx = min(newx, self.map.width - state.config["tile_size"])
         if state.keys[pygame.K_UP]:
             newy = self.player.rect.centery - self.player.info["razza"]["velocita"]
             newy = max(0, newy)
         if state.keys[pygame.K_DOWN]:
             newy = self.player.rect.centery + self.player.info["razza"]["velocita"]
-            newy = min(newy, self.map.height - Map.TILE_SIZE)
+            newy = min(newy, self.map.height - state.config["tile_size"])
         self.player.move(newx, newy)
 
     def go_back_player(self):
-        newx = round(self.player.back[0] / (Map.TILE_SIZE // 2)) * (Map.TILE_SIZE // 2)
-        newy = round(self.player.back[1] / (Map.TILE_SIZE // 2)) * (Map.TILE_SIZE // 2)
+        newx = round(self.player.back[0] / (state.config["tile_size"] // 2)) * (
+            state.config["tile_size"] // 2
+        )
+        newy = round(self.player.back[1] / (state.config["tile_size"] // 2)) * (
+            state.config["tile_size"] // 2
+        )
         self.player.move(newx, newy)
 
     def load_visible_area(self):
@@ -72,22 +76,22 @@ class Engine:
         self.visible_not_path.empty()
         self.visible_items.empty()
         self.visible_monsters.empty()
-        tile_visibili_x = self.camera.width // Map.TILE_SIZE + 2
-        tile_visibili_y = self.camera.height // Map.TILE_SIZE + 2
+        tile_visibili_x = self.camera.width // state.config["tile_size"] + 2
+        tile_visibili_y = self.camera.height // state.config["tile_size"] + 2
         camera_left = self.camera.x - self.camera.width // 2
         camera_top = self.camera.y - self.camera.height // 2
-        tile_start_x = camera_left // Map.TILE_SIZE
-        tile_start_y = camera_top // Map.TILE_SIZE
+        tile_start_x = camera_left // state.config["tile_size"]
+        tile_start_y = camera_top // state.config["tile_size"]
         for y in range(tile_start_y, tile_start_y + tile_visibili_y):
             for x in range(tile_start_x, tile_start_x + tile_visibili_x):
                 if 0 <= x < self.map.blocchi_x and 0 <= y < self.map.blocchi_y:
                     tile = self.map.tiled_map[y][x]
                     img_tile = self.map.tiles_images[tile["type"]]
                     rect_tile = pygame.Rect(
-                        x * Map.TILE_SIZE,
-                        y * Map.TILE_SIZE,
-                        Map.TILE_SIZE,
-                        Map.TILE_SIZE,
+                        x * state.config["tile_size"],
+                        y * state.config["tile_size"],
+                        state.config["tile_size"],
+                        state.config["tile_size"],
                     )
                     tile = Tile(img_tile, rect_tile, tile["type"], tile["muro"])
                     if tile.wall:
@@ -97,22 +101,19 @@ class Engine:
                 for item in self.map.items.values():
                     image = self.map.tiles_images[item["img"]]
                     rect = image.get_rect()
-                    item_tile_x = rect.x // Map.TILE_SIZE
-                    item_tile_y = rect.y // Map.TILE_SIZE
+                    item_tile_x = rect.x // state.config["tile_size"]
+                    item_tile_y = rect.y // state.config["tile_size"]
                     if x == item_tile_x and y == item_tile_y:
                         self.visible_items.add(Item(id, item, image, rect))
                 for monster in self.map.monsters.values():
                     monster_sprite = Monster(self.db, id)
                     monster_sprite.load(monster)
-                    monster_tile_x = monster_sprite.rect.x // Map.TILE_SIZE
-                    monster_tile_y = monster_sprite.rect.y // Map.TILE_SIZE
+                    monster_tile_x = monster_sprite.rect.x // state.config["tile_size"]
+                    monster_tile_y = monster_sprite.rect.y // state.config["tile_size"]
                     if x == monster_tile_x and y == monster_tile_y:
                         self.move_monster(monster_sprite)
                         self.visible_monsters.add(monster_sprite)
 
-    # todo aggiustare:
-    #   coordinate mappa vs coordinate assolute;
-    #   coordinate topleft vs coordinate centro
     def move_monster(self, monster: Monster):
         shown = False
         last_target = None
@@ -121,7 +122,7 @@ class Engine:
         # qui
         if (
             self.distance(monster.rect.center, self.player.rect.center)
-            <= monster.raggio_vista
+            <= monster.info["razza"]["vista"]
         ):
             if self.can_show(monster.rect.center, self.player.rect.center):
                 shown = True
