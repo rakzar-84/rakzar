@@ -23,7 +23,7 @@ class Map:
     tiles_images: list
     tiles_types: dict
     items: dict
-    monsters: dict
+    npc: list
 
     def __init__(self):
         self.width = 0
@@ -35,16 +35,11 @@ class Map:
         self.tiles_images = []
         self.tiles_types = {}
         self.items = {}
-        self.monsters = {}
-
-        self.visible_tiles = pygame.sprite.Group()
-        self.visible_wall = pygame.sprite.Group()
-        self.visible_items = pygame.sprite.Group()
-        self.visible_monsters = pygame.sprite.Group()
+        self.npc = []
 
     def load_map(self):
         try:
-            immagine = Image.open(state.config["mappa"] + "mappa.png").convert("RGB")
+            immagine = Image.open(state.config["mappa"] + "map.png").convert("RGB")
             self.width, self.height = immagine.size
             self.blocchi_x = self.width // state.config["tile_size"]
             self.blocchi_y = self.height // state.config["tile_size"]
@@ -69,7 +64,7 @@ class Map:
                         self.start = (bx, by)
                 self.tiled_map.append(riga)
             self.load_items()
-            self.load_mostri()
+            self.load_npc()
         except Exception as e:
             raise RuntimeError("Caricamento mappa non riuscito") from e
 
@@ -99,9 +94,9 @@ class Map:
         with open(state.config["mappa"] + "items.json", "r", encoding="utf-8") as file:
             self.items = json.load(file)
 
-    def load_mostri(self):
-        with open(state.config["mappa"] + "mostri.json", "r", encoding="utf-8") as file:
-            self.monsters = json.load(file)
+    def load_npc(self):
+        with open(state.config["mappa"] + "png.json", "r", encoding="utf-8") as file:
+            self.npc = json.load(file)
 
     def draw(self, area: pygame.Surface, camera: "Camera"):
         camera_left = camera.x - camera.width // 2
@@ -112,9 +107,9 @@ class Map:
         for item in self.visible_items:
             rect_area = item.rect.move(-camera_left, -camera_top)
             area.blit(item.image, rect_area)
-        for monster in self.visible_monsters:
-            rect_area = monster.rect.move(-camera_left, -camera_top)
-            area.blit(monster.image, rect_area)
+        for npc in self.visible_npc:
+            rect_area = npc.rect.move(-camera_left, -camera_top)
+            area.blit(npc.image, rect_area)
 
 
 class Tile(GSprite):

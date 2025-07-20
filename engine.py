@@ -4,11 +4,12 @@ import pygame
 
 import state
 from camera import Camera
+from core import GSprite
 from db import Db
 from interface import GamingArea
 from item import Item
 from map import Map, Tile
-from npc import Monster
+from npc import Npc
 from player import Player
 
 
@@ -22,7 +23,7 @@ class Engine:
     visible_path: pygame.sprite.Group
     visible_not_path: pygame.sprite.Group
     visible_items: pygame.sprite.Group
-    visible_monsters: pygame.sprite.Group
+    visible_npc: pygame.sprite.Group
 
     def __init__(self, db: Db):
         self.db = db
@@ -33,7 +34,7 @@ class Engine:
         self.visible_path = pygame.sprite.Group()
         self.visible_not_path = pygame.sprite.Group()
         self.visible_items = pygame.sprite.Group()
-        self.visible_monsters = pygame.sprite.Group()
+        self.visible_npc = pygame.sprite.Group()
 
     def init(self, map: Map, camera: Camera, player: Player, gamin_area: GamingArea):
         self.map = map
@@ -44,6 +45,7 @@ class Engine:
     def run(self):
         self.move_player()
         self.load_visible_area()
+        self.move_visible_monster()
 
     def move_player(self):
         newx = self.player.rect.centerx
@@ -75,7 +77,7 @@ class Engine:
         self.visible_path.empty()
         self.visible_not_path.empty()
         self.visible_items.empty()
-        self.visible_monsters.empty()
+        self.visible_npc.empty()
         tile_visibili_x = self.camera.width // state.config["tile_size"] + 2
         tile_visibili_y = self.camera.height // state.config["tile_size"] + 2
         camera_left = self.camera.x - self.camera.width // 2
@@ -94,6 +96,11 @@ class Engine:
                         state.config["tile_size"],
                     )
                     tile = Tile(img_tile, rect_tile, tile["type"], tile["muro"])
+                    # todo tipi tile
+                    # path: visione, movimento
+                    # wall:
+                    # ostacolo: visione
+                    # oscuramento: movimento
                     if tile.wall:
                         self.visible_not_path.add(tile)
                     else:
@@ -105,34 +112,37 @@ class Engine:
                     item_tile_y = rect.y // state.config["tile_size"]
                     if x == item_tile_x and y == item_tile_y:
                         self.visible_items.add(Item(id, item, image, rect))
-                for monster in self.map.monsters.values():
-                    monster_sprite = Monster(self.db, id)
-                    monster_sprite.load(monster)
-                    monster_tile_x = monster_sprite.rect.x // state.config["tile_size"]
-                    monster_tile_y = monster_sprite.rect.y // state.config["tile_size"]
-                    if x == monster_tile_x and y == monster_tile_y:
-                        self.move_monster(monster_sprite)
-                        self.visible_monsters.add(monster_sprite)
+                for npc in self.map.npc.values():
+                    npc_sprite = Npc(self.db, npc)
+                    npc_sprite.load(npc)
+                    npc_tile_x = npc_sprite.rect.x // state.config["tile_size"]
+                    npc_tile_y = npc_sprite.rect.y // state.config["tile_size"]
+                    if x == npc_tile_x and y == npc_tile_y:
+                        self.visible_npc.add(npc_sprite)
 
-    def move_monster(self, monster: Monster):
+    def move_visible_monster(self):
+        for npc in self.visible_npc:
+            if npc.info["tipo"] == "Mostro":
+                self.move_monster(npc)
+
+    def move_monster(self, npc: Npc):
         shown = False
         last_target = None
         nop = 0
         path = []
-        # qui
         if (
-            self.distance(monster.rect.center, self.player.rect.center)
-            <= monster.info["razza"]["vista"]
+            self.distance(npc.rect.center, self.player.rect.center)
+            <= npc.info["razza"]["vista"]
         ):
-            if self.can_show(monster.rect.center, self.player.rect.center):
+            if self.can_show(npc.rect.center, self.player.rect.center):
                 shown = True
         if shown:
             now = pygame.time.get_ticks()
             if not path or last_target != self.player.rect.center or now - nop > 1000:
-                path = self.bfs(monster.rect.center, self.player.rect.center)
+                path = self.bfs(npc.rect.center, self.player.rect.center)
                 last_target = self.player.rect.center
                 nop = now
-        self.follow_path(monster, path)
+        self.follow_path(npc, path)
 
     def distance(self, a: tuple, b: tuple):
         return math.hypot(a[0] - b[0], a[1] - b[1])
@@ -190,11 +200,12 @@ class Engine:
     def near_path(self, map: Map, pos: tuple):
         x, y = pos
         adiacenti = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+        # considerare item e altro
         return [p for p in adiacenti if not map[p[1]][p[0]]["muro"]]
 
-    def follow_path(self, monster: Monster, path: list):
+    def follow_path(self, subject: GSprite, path: list):
         if path:
             next = self.path[0]
-            if next != monster.rect.center:
-                monster.rect.center = next
+            if next != subject.rect.center:
+                subject.rect.center = next
                 path.pop(0)

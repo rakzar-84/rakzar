@@ -111,6 +111,7 @@ class Loop:
             if self.player.rect.colliderect(item.rect):
                 item.collide(self.player, self.map.items, self.interface.dialog)
                 # todo collide mostro
+                # todo collide png
             if state.mouse:
                 x = (
                     state.mouse["pos"][0]
@@ -128,10 +129,13 @@ class Loop:
                     if self.player.rect.colliderect(item.rect.inflate(dist, dist)):
                         item.act(self.player, self.map.items, self.interface.dialog)
                         # todo attacca mostro
+                        # todo parla con png
                 elif state.mouse["button"] == "right" and item.rect.collidepoint(x, y):
                     if self.player.rect.colliderect(item.rect.inflate(dist, dist)):
                         item.act_sec(self.player, self.map.items, self.interface.dialog)
                         # todo menù azioni su mostro (pausa)
+                        # todo scelta oggetto da usare con png (pausa)
+        # todo interazioni png e item
 
     def animate(self):
         # todo animazioni
