@@ -1,4 +1,5 @@
 import traceback
+from typing import TYPE_CHECKING
 
 import pygame
 
@@ -9,12 +10,14 @@ from engine import Engine
 from interface import Interface
 from map import Map
 from player import Player
-from screen import Screen
+
+if TYPE_CHECKING:
+    from screen import Screen
 
 
 class Loop:
 
-    screen: Screen
+    screen: "Screen"
     clock: pygame.time.Clock
     map: Map
     interface: Interface
@@ -23,7 +26,7 @@ class Loop:
     engine: Engine
     error: Exception
 
-    def __init__(self, screen: Screen):
+    def __init__(self, screen: "Screen"):
         self.screen = screen
         self.clock = None
         self.map = None
@@ -57,12 +60,12 @@ class Loop:
                 self.check_input()
                 self.update()
                 self.do_interaction()
-                # todo serve nuovo update?
                 self.animate()
                 self.audio()
             except Exception as e:
                 print(traceback.format_exc())
                 self.error = e
+            # qui
             self.render()
 
     def check_input(self):
@@ -93,6 +96,8 @@ class Loop:
                     state.mouse["button"] = "left"
                 elif event.button == 3:
                     state.mouse["button"] = "right"
+                else:
+                    state.mouse["button"] = ""
             if event.type == pygame.QUIT:
                 state.running = 0
 
@@ -102,40 +107,57 @@ class Loop:
         self.engine.run()
         state.resize = False
 
-    def do_interaction(self):  # qui
-        collisi = pygame.sprite.spritecollide(self.player, self.map.visible_wall, False)
-        if collisi:
-            self.player.go_back()
-        dist = 8  # todo parametrizzare?
-        for item in self.map.visible_items:
-            if self.player.rect.colliderect(item.rect):
-                item.collide(self.player, self.map.items, self.interface.dialog)
-                # todo collide mostro
-                # todo collide png
-            if state.mouse:
-                x = (
-                    state.mouse["pos"][0]
-                    - self.interface.gaming_area.rect.x
-                    + self.camera.x
-                    - self.interface.gaming_area.rect.width // 2
-                )
-                y = (
-                    state.mouse["pos"][1]
-                    - self.interface.gaming_area.rect.y
-                    + self.camera.y
-                    - self.interface.gaming_area.rect.height // 2
-                )
+    def do_interaction(self):
+        self.engine.check_collision()
+        self.engine.check_is_seen()
+        click, clicked = self.check_clicked_item()
+        if click:
+            if self.engine.check_near(clicked):
+                if click == 1:
+                    clicked.act(
+                        self.player, self.map.items, self.interface.dialog
+                    )  # azione contestuale principale
+                    # todo attacca mostro
+                    # todo parla con png
+                    # todo seleziona personaggio
+                elif click == 2:
+                    pass
+                    # todo menù attacchi secondari (pausa?)
+                    # todo menù azioni contestuali oggetto, personaggio, png (pausa?)
+            elif self.engine.within_range(self.player, clicked):
+                if click == 1:
+                    pass
+                    # todo attacca mostro
+                    # todo seleziona personaggio
+                elif click == 2:
+                    pass
+                    # todo menù attacchi secondari (pausa?)
+        # todo interazioni ambientali o particolari?
+
+    def check_clicked_item(self):
+        click = 0
+        clicked = None
+        if state.mouse:
+            x = (
+                state.mouse["pos"][0]
+                - self.interface.gaming_area.rect.x
+                + self.camera.x
+                - self.interface.gaming_area.rect.width // 2
+            )
+            y = (
+                state.mouse["pos"][1]
+                - self.interface.gaming_area.rect.y
+                + self.camera.y
+                - self.interface.gaming_area.rect.height // 2
+            )
+            for item in self.engine.visible_items:
                 if state.mouse["button"] == "left" and item.rect.collidepoint(x, y):
-                    if self.player.rect.colliderect(item.rect.inflate(dist, dist)):
-                        item.act(self.player, self.map.items, self.interface.dialog)
-                        # todo attacca mostro
-                        # todo parla con png
+                    click = 1
+                    clicked = item
                 elif state.mouse["button"] == "right" and item.rect.collidepoint(x, y):
-                    if self.player.rect.colliderect(item.rect.inflate(dist, dist)):
-                        item.act_sec(self.player, self.map.items, self.interface.dialog)
-                        # todo menù azioni su mostro (pausa)
-                        # todo scelta oggetto da usare con png (pausa)
-        # todo interazioni png e item
+                    click = 2
+                    clicked = item
+        return click, clicked
 
     def animate(self):
         # todo animazioni
@@ -151,7 +173,7 @@ class Loop:
             self.screen.draw()
             self.interface.dialog.text += str(self.error) + "\n" if self.error else ""
             self.interface.draw()
-            self.map.draw(self.interface.gaming_area.image, self.camera)
+            self.map.draw(self.interface.gaming_area.image, self.camera, self.engine)
             self.player.draw(self.interface.gaming_area.image, self.camera, self.map)
             self.interface.sprite_set.draw(self.screen.image)
             pygame.display.flip()

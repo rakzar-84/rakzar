@@ -10,6 +10,7 @@ from core import GSprite
 
 if TYPE_CHECKING:
     from camera import Camera
+    from engine import Engine
 
 
 class Map:
@@ -60,7 +61,7 @@ class Map:
                     colore = Counter(pixel_data).most_common(1)[0][0]
                     hex = "#{:02X}{:02X}{:02X}".format(*colore)
                     riga.append(self.tiles_types[hex])
-                    if hex == "#404040":
+                    if self.tiles_types[hex] == "start":
                         self.start = (bx, by)
                 self.tiled_map.append(riga)
             self.load_items()
@@ -87,27 +88,30 @@ class Map:
             self.tiles_images.append(tile_img)
 
     def load_tiles_type(self):
-        with open(state.config["mappa"] + "types.json", "r", encoding="utf-8") as file:
+        with open(state.config["mappa"] + "types.json", encoding="utf-8") as file:
             self.tiles_types = json.load(file)
 
     def load_items(self):
-        with open(state.config["mappa"] + "items.json", "r", encoding="utf-8") as file:
+        with open(state.config["mappa"] + "items.json", encoding="utf-8") as file:
             self.items = json.load(file)
 
     def load_npc(self):
-        with open(state.config["mappa"] + "png.json", "r", encoding="utf-8") as file:
+        with open(state.config["mappa"] + "png.json", encoding="utf-8") as file:
             self.npc = json.load(file)
 
-    def draw(self, area: pygame.Surface, camera: "Camera"):
+    def draw(self, area: pygame.Surface, camera: "Camera", engine: "Engine"):
         camera_left = camera.x - camera.width // 2
         camera_top = camera.y - camera.height // 2
-        for tile in self.visible_tiles:
+        for tile in engine.visible_path:
             rect_area = tile.rect.move(-camera_left, -camera_top)
             area.blit(tile.image, rect_area)
-        for item in self.visible_items:
+        for tile in engine.visible_not_path:
+            rect_area = tile.rect.move(-camera_left, -camera_top)
+            area.blit(tile.image, rect_area)
+        for item in engine.visible_items:
             rect_area = item.rect.move(-camera_left, -camera_top)
             area.blit(item.image, rect_area)
-        for npc in self.visible_npc:
+        for npc in engine.visible_npc:
             rect_area = npc.rect.move(-camera_left, -camera_top)
             area.blit(npc.image, rect_area)
 
@@ -115,10 +119,10 @@ class Map:
 class Tile(GSprite):
 
     def __init__(
-        self, image: pygame.surface.Surface, rect: pygame.Rect, type: int, muro: bool
+        self, image: pygame.surface.Surface, rect: pygame.Rect, type: int, cat: str
     ):
         super().__init__()
         self.image = image
         self.rect = rect
         self.type = type
-        self.wall = muro
+        self.cat = cat

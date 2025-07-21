@@ -1,24 +1,28 @@
+from typing import TYPE_CHECKING
+
 import pygame
 
 import state
-from camera import Camera
 from core import GSprite
-from db import Db
-from item import Item
-from map import Map
+
+if TYPE_CHECKING:
+    from camera import Camera
+    from db import Db
+    from item import Item
+    from map import Map
 
 
 class Player(GSprite):
 
-    dg: Db
-    camera: Camera
+    dg: "Db"
+    camera: "Camera"
     back: tuple
     info: dict
     state: dict
     equipment: list
     abilities: list
 
-    def __init__(self, db: Db):
+    def __init__(self, db: "Db"):
         super().__init__()
         self.db = db
         self.camera = None
@@ -38,19 +42,19 @@ class Player(GSprite):
             dimension = razza["dimensione"] * state.config["tile_size"]
             self.state = self.db.getOne(
                 "SELECT * FROM stato WHERE personaggio_id = "
-                + str(state.config["personaggio"])
+                + str(self.info["razza_id"])
             )
             self.equipment = self.db.get(
                 "SELECT * FROM oggetti AS o INNER JOIN equipaggiamento AS e ON e.oggetto_id = o.id WHERE e.personaggio_id = "
-                + str(self.info["personaggio"])
+                + str(self.info["id"])
             )
             # todo dove mettere le caratteristiche degli oggetti?
             self.abilities = self.db.get(
                 "SELECT * FROM abilita AS a INNER JOIN abilita_personaggi AS p ON p.abilita_id = a.id WHERE p.personaggio_id = "
-                + str(self.info["personaggio"])
+                + str(self.info["id"])
             )
             self.image = pygame.image.load(
-                "assets/personaggi" + self.info["img"]
+                "assets/personaggi/" + self.info["img"]
             ).convert_alpha()  # todo ridimensionare in base alle dimensioni
             self.rect = self.image.get_rect(
                 center=(start[0] * (dimension // 2), start[1] * (dimension // 2))
@@ -65,7 +69,7 @@ class Player(GSprite):
         self.rect.centery = y
         self.camera.update()
 
-    def draw(self, area: pygame.surface.Surface, camera: Camera, mappa: Map):
+    def draw(self, area: pygame.surface.Surface, camera: "Camera", mappa: "Map"):
         if camera.width // 2 < self.rect.centerx < mappa.width - camera.width // 2:
             x = area.get_rect().centerx - state.config["tile_size"] // 2
         else:
@@ -86,8 +90,7 @@ class Player(GSprite):
             )
         area.blit(self.image, (x, y))
 
-    def add_item(self, item: Item):
-        # todo rivedere tabella equipaggiamento
+    def add_item(self, item: "Item"):
         self.equipment.append(
             {
                 "nome": item.id,

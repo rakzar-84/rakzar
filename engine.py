@@ -1,31 +1,35 @@
 import math
+from typing import TYPE_CHECKING
 
 import pygame
 
 import state
-from camera import Camera
-from core import GSprite
-from db import Db
-from interface import GamingArea
 from item import Item
-from map import Map, Tile
+from map import Tile
 from npc import Npc
-from player import Player
+
+if TYPE_CHECKING:
+    from camera import Camera
+    from core import GSprite
+    from db import Db
+    from interface import GamingArea
+    from map import Map
+    from player import Player
 
 
 class Engine:
 
-    db: Db
-    map: Map
-    camera: Camera
-    player: Player
-    gaming_area: GamingArea
+    db: "Db"
+    map: "Map"
+    camera: "Camera"
+    player: "Player"
+    gaming_area: "GamingArea"
     visible_path: pygame.sprite.Group
     visible_not_path: pygame.sprite.Group
     visible_items: pygame.sprite.Group
     visible_npc: pygame.sprite.Group
 
-    def __init__(self, db: Db):
+    def __init__(self, db: "Db"):
         self.db = db
         self.map = None
         self.camera = None
@@ -36,7 +40,9 @@ class Engine:
         self.visible_items = pygame.sprite.Group()
         self.visible_npc = pygame.sprite.Group()
 
-    def init(self, map: Map, camera: Camera, player: Player, gamin_area: GamingArea):
+    def init(
+        self, map: "Map", camera: "Camera", player: "Player", gamin_area: "GamingArea"
+    ):
         self.map = map
         self.camera = camera
         self.player = player
@@ -48,6 +54,7 @@ class Engine:
         self.move_visible_monster()
 
     def move_player(self):
+        # todo amovimento con il click
         newx = self.player.rect.centerx
         newy = self.player.rect.centery
         if state.keys[pygame.K_LEFT]:
@@ -95,13 +102,13 @@ class Engine:
                         state.config["tile_size"],
                         state.config["tile_size"],
                     )
-                    tile = Tile(img_tile, rect_tile, tile["type"], tile["muro"])
+                    tile = Tile(img_tile, rect_tile, tile["type"], tile["cat"])
                     # todo tipi tile
                     # path: visione, movimento
                     # wall:
                     # ostacolo: visione
                     # oscuramento: movimento
-                    if tile.wall:
+                    if tile.cat == "wall":
                         self.visible_not_path.add(tile)
                     else:
                         self.visible_path.add(tile)
@@ -112,8 +119,8 @@ class Engine:
                     item_tile_y = rect.y // state.config["tile_size"]
                     if x == item_tile_x and y == item_tile_y:
                         self.visible_items.add(Item(id, item, image, rect))
-                for npc in self.map.npc.values():
-                    npc_sprite = Npc(self.db, npc)
+                for npc in self.map.npc:
+                    npc_sprite = Npc(self.db)
                     npc_sprite.load(npc)
                     npc_tile_x = npc_sprite.rect.x // state.config["tile_size"]
                     npc_tile_y = npc_sprite.rect.y // state.config["tile_size"]
@@ -126,33 +133,15 @@ class Engine:
                 self.move_monster(npc)
 
     def move_monster(self, npc: Npc):
-        shown = False
         last_target = None
         nop = 0
         path = []
-        if (
-            self.distance(npc.rect.center, self.player.rect.center)
-            <= npc.info["razza"]["vista"]
-        ):
-            if self.can_show(npc.rect.center, self.player.rect.center):
-                shown = True
-        if shown:
-            now = pygame.time.get_ticks()
-            if not path or last_target != self.player.rect.center or now - nop > 1000:
-                path = self.bfs(npc.rect.center, self.player.rect.center)
-                last_target = self.player.rect.center
-                nop = now
+        now = pygame.time.get_ticks()
+        if not path or last_target != self.player.rect.center or now - nop > 1000:
+            path = self.bfs(npc.rect.center, self.player.rect.center)
+            last_target = self.player.rect.center
+            nop = now
         self.follow_path(npc, path)
-
-    def distance(self, a: tuple, b: tuple):
-        return math.hypot(a[0] - b[0], a[1] - b[1])
-
-    def can_show(self, start: tuple, end: tuple):
-        check = True
-        for x, y in self.bresenham(start, end):
-            if self.map.tiled_map[y][x]["muro"]:
-                check = False
-        return check
 
     def bresenham(self, start: tuple, end: tuple):
         goal = False
@@ -177,7 +166,7 @@ class Engine:
                 y0 += sy
         return line
 
-    def bfs(self, map: Map, start: tuple, end: tuple):
+    def bfs(self, map: "Map", start: tuple, end: tuple):
         queue = [start]
         visited = {start: None}
         goal = False
@@ -197,15 +186,72 @@ class Engine:
         path.reverse()
         return path
 
-    def near_path(self, map: Map, pos: tuple):
+    def near_path(self, map: "Map", pos: tuple):
         x, y = pos
         adiacenti = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
         # considerare item e altro
-        return [p for p in adiacenti if not map[p[1]][p[0]]["muro"]]
+        return [p for p in adiacenti if not map[p[1]][p[0]]["cat"] == "wall"]
 
-    def follow_path(self, subject: GSprite, path: list):
+    def follow_path(self, subject: "GSprite", path: list):
         if path:
             next = self.path[0]
             if next != subject.rect.center:
-                subject.rect.center = next
+                subject.move(next[0], next[1])
                 path.pop(0)
+
+    def distance(self, a: tuple, b: tuple):
+        return math.hypot(a[0] - b[0], a[1] - b[1])
+
+    def can_show(self, start: tuple, end: tuple):
+        check = True
+        for x, y in self.bresenham(start, end):
+            if self.map.tiled_map[y][x]["cat"] == "wall":
+                check = False
+        return check
+
+    def go_back_npc(self, npc: Npc):
+        newx = round(npc.back[0] / (state.config["tile_size"] // 2)) * (
+            state.config["tile_size"] // 2
+        )
+        newy = round(npc.back[1] / (state.config["tile_size"] // 2)) * (
+            state.config["tile_size"] // 2
+        )
+        npc.move(newx, newy)
+
+    def check_collision(self):
+        collisioni = pygame.sprite.spritecollide(
+            self.player, self.visible_not_path, False
+        )
+        if collisioni:
+            self.go_back_player()
+        collisioni = pygame.sprite.spritecollide(self.player, self.visible_npc, False)
+        if collisioni:
+            self.go_back_player()  # todo chi va indietro?
+        for npc in self.visible_npc:
+            if npc.info["tipo"] == "Mostro":
+                collisioni = pygame.sprite.spritecollide(
+                    npc, self.visible_not_path, False
+                )
+                if collisioni:
+                    self.go_back_npc()
+
+    def check_is_seen(self):
+        for npc in self.visible_npc:
+            if (
+                self.distance(npc.rect.center, self.player.rect.center)
+                <= npc.razza["vista"]
+            ):
+                # todo considerare effetti player (invidibilità)
+                if self.can_show(npc.rect.center, self.player.rect.center):
+                    npc.alerted = True
+                    npc.act_alerted()  # todo i mostri attaccano
+
+    def check_near(self, target: "GSprite"):
+        dist = 8  # todo parametrizzare?
+        is_near = self.player.rect.colliderect(target.rect.inflate(dist, dist))
+        return is_near
+
+    def subject(self, subject: "GSprite", target: "GSprite"):
+        distance = self.distance(subject.rect.center, target.rect.center)
+        is_within_range = subject.subject(distance)
+        return is_within_range

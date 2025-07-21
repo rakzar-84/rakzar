@@ -1,23 +1,27 @@
+from typing import TYPE_CHECKING
+
 import pygame
 
 import state
 from core import GSprite
-from screen import Screen
+
+if TYPE_CHECKING:
+    from screen import Screen
 
 
 class Interface:
 
-    screen: Screen
+    screen: "Screen"
     sprite_set: pygame.sprite.Group
-    menu: GSprite
-    party_info: GSprite
-    mission_info: GSprite
-    characters: GSprite
-    gaming_area: GSprite
-    minimap: GSprite
-    dialog: GSprite
+    menu: "GSprite"
+    party_info: "GSprite"
+    mission_info: "GSprite"
+    characters: "GSprite"
+    gaming_area: "GSprite"
+    minimap: "GSprite"
+    dialog: "GSprite"
 
-    def __init__(self, screen: Screen):
+    def __init__(self, screen: "Screen"):
         self.screen = screen
         self.sprite_set = pygame.sprite.Group()
         self.menu = Menu(self.sprite_set, self.screen)
@@ -39,15 +43,13 @@ class Interface:
 
 class Menu(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
 
-    def update(
-        self,
-    ):
+    def update(self):
         if state.resize:
             w, h, x, y = self.calculate()
             self.image = pygame.Surface((w, h), pygame.SRCALPHA)
@@ -84,9 +86,9 @@ class Menu(GSprite):
 
 class PartyInfo(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
 
@@ -106,7 +108,7 @@ class PartyInfo(GSprite):
         w = area_w * state.config["interfaccia"]["patyinfo"]
         h = state.config["interfaccia"]["top"]
         x = (
-            area_w // state.config["interfaccia"]["left"]
+            area_w * state.config["interfaccia"]["left"]
             + state.config["interfaccia"]["cornice"]
         )
         y = state.config["interfaccia"]["cornice"]
@@ -124,9 +126,9 @@ class PartyInfo(GSprite):
 
 class MissionInfo(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
 
@@ -165,9 +167,9 @@ class MissionInfo(GSprite):
 
 class Characters(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
 
@@ -195,18 +197,18 @@ class Characters(GSprite):
             - state.config["interfaccia"]["top"]
         )
         x = state.config["interfaccia"]["cornice"]
-        y = state.config["interfaccia"]["left"]
+        y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
-        self.image.fill((0, 0, 0, 0))
+        self.image.fill((0, 0, 0, 255))
 
 
 class GamingArea(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
 
@@ -233,7 +235,7 @@ class GamingArea(GSprite):
             area_w * state.config["interfaccia"]["left"]
             + state.config["interfaccia"]["cornice"]
         )
-        y = state.config["interfaccia"]["left"] + state.config["interfaccia"]["cornice"]
+        y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -243,9 +245,9 @@ class GamingArea(GSprite):
 # todo il testo deve andare a capo
 class Dialog(GSprite):
 
-    screen: Screen
+    screen: "Screen"
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
         self.text = ""
@@ -270,10 +272,13 @@ class Dialog(GSprite):
         w = area_w * state.config["interfaccia"]["dialogw"]
         h = state.config["interfaccia"]["dialogh"]
         offset = (
-            1
-            - state.config["interfaccia"]["left"]
-            * (1 - state.config["interfaccia"]["dialogw"])
-            // 2
+            state.config["interfaccia"]["left"]
+            + (
+                1
+                - state.config["interfaccia"]["left"]
+                - state.config["interfaccia"]["dialogw"]
+            )
+            / 2
         )
         x = area_w * offset + state.config["interfaccia"]["cornice"]
         y = (
@@ -296,7 +301,7 @@ class Dialog(GSprite):
 
 class Minimap(GSprite):
 
-    def __init__(self, group: pygame.sprite.Group, screen: Screen):
+    def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
         self.rect = None

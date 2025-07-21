@@ -1,12 +1,16 @@
+from typing import TYPE_CHECKING
+
 import state
-from core import GSprite
-from map import Map
+
+if TYPE_CHECKING:
+    from core import GSprite
+    from map import Map
 
 
 class Camera:
 
-    target: GSprite
-    scene: GSprite
+    target: "GSprite"
+    scene: "GSprite"
     width: int
     height: int
     map_w: int
@@ -14,7 +18,7 @@ class Camera:
     x: int
     y: int
 
-    def __init__(self, target: GSprite, scene: GSprite, map: Map):
+    def __init__(self, target: "GSprite", scene: "GSprite", map: "Map"):
         self.target = target
         self.scene = scene
         self.width = scene.rect.width

@@ -1,10 +1,38 @@
 {
     "#000000":{
         "type":6,
-        "muro":true
+        "cat":"wall"
     },
     "#FFFFFF":{
         "type":10,
-        "muro":false
+        "cat":"path"
+    },
+    "#808080":{
+        "type":10,
+        "cat":"start"
+    },
+    "#7F3300":{
+        "type":10,
+        "cat":"door"
+    },
+    "#4CFF00":{
+        "type":10,
+        "cat":"npc"
+    },
+    "#FFD800":{
+        "type":10,
+        "cat":"box"
+    },
+    "#0026FF":{
+        "type":10,
+        "cat":"trap"
+    },
+    "#FF0000":{
+        "type":10,
+        "cat":"obstacle"
+    },
+    "#FF00DC":{
+        "type":6,
+        "cat":"lever"
     }
 }

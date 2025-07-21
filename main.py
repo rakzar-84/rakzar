@@ -1,3 +1,4 @@
+# todo evitare moduli con solo una classe
 import json
 import sys
 import traceback
@@ -12,7 +13,7 @@ from screen import Screen
 db = None
 screen = None
 try:
-    with open("config.json", "r", encoding="utf-8") as file:
+    with open("config.json", encoding="utf-8") as file:
         state.config = json.load(file)
     pygame.init()
     screen = Screen()
