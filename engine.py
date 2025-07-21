@@ -57,19 +57,25 @@ class Engine:
         # todo amovimento con il click
         newx = self.player.rect.centerx
         newy = self.player.rect.centery
+        updated = False
         if state.keys[pygame.K_LEFT]:
             newx = self.player.rect.centerx - self.player.info["razza"]["velocita"]
             newx = max(0, newx)
+            updated = True
         if state.keys[pygame.K_RIGHT]:
             newx = self.player.rect.centerx + self.player.info["razza"]["velocita"]
             newx = min(newx, self.map.width - state.config["tile_size"])
+            updated = True
         if state.keys[pygame.K_UP]:
             newy = self.player.rect.centery - self.player.info["razza"]["velocita"]
             newy = max(0, newy)
+            updated = True
         if state.keys[pygame.K_DOWN]:
             newy = self.player.rect.centery + self.player.info["razza"]["velocita"]
             newy = min(newy, self.map.height - state.config["tile_size"])
-        self.player.move(newx, newy)
+            updated = True
+        if updated:
+            self.player.move(newx, newy)
 
     def go_back_player(self):
         newx = round(self.player.back[0] / (state.config["tile_size"] // 2)) * (
@@ -119,6 +125,7 @@ class Engine:
                     item_tile_y = rect.y // state.config["tile_size"]
                     if x == item_tile_x and y == item_tile_y:
                         self.visible_items.add(Item(id, item, image, rect))
+                # bug questo blocco rallenta un botto, ma anche senza questo blocco sto a 15ms, decisamente troppi
                 for npc in self.map.npc:
                     npc_sprite = Npc(self.db)
                     npc_sprite.load(npc)

@@ -1,3 +1,4 @@
+import time
 import traceback
 from typing import TYPE_CHECKING
 
@@ -43,18 +44,20 @@ class Loop:
         self.map = Map()
         self.map.load_map()
         self.interface = Interface(self.screen)
-        self.interface.update()
-        state.resize = False
+        self.interface.init()
         self.player = Player(db)
-        self.player.load(self.map.start)
+        self.engine = Engine(db)
         self.camera = Camera(self.player, self.interface.gaming_area, self.map)
         self.player.camera = self.camera
-        self.engine = Engine(db)
+        self.player.load(self.map.start)
         self.engine.init(self.map, self.camera, self.player, self.interface.gaming_area)
+        state.resize = False
 
     def execute(self):
         state.running = 1
         while state.running:
+            # debug
+            state.vars["start"] = time.perf_counter()
             try:
                 self.clock.tick(state.config["fps"])
                 self.check_input()
@@ -67,6 +70,11 @@ class Loop:
                 self.error = e
             # qui
             self.render()
+            # debug
+            state.vars["delta"] = time.perf_counter() - state.vars["start"]
+            # debug
+            if "delta" in state.vars:
+                print(f"Frame time: {state.vars['delta']*1000:.2f} ms")
 
     def check_input(self):
         state.keys = pygame.key.get_pressed()
@@ -103,9 +111,11 @@ class Loop:
 
     def update(self):
         self.screen.update()
-        self.interface.update()
+        if state.resize:
+            self.interface.init()
+            self.camera.update()
+            state.resize = False
         self.engine.run()
-        state.resize = False
 
     def do_interaction(self):
         self.engine.check_collision()

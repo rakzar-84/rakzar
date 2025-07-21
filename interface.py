@@ -32,9 +32,9 @@ class Interface:
         self.minimap = Minimap(self.sprite_set, self.screen)
         self.dialog = Dialog(self.sprite_set, self.screen)
 
-    def update(self):
+    def init(self):
         for sprite in self.sprite_set:
-            sprite.update()
+            sprite.init()
 
     def draw(self):
         for sprite in self.sprite_set:
@@ -49,13 +49,12 @@ class Menu(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -92,13 +91,12 @@ class PartyInfo(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -132,13 +130,12 @@ class MissionInfo(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -173,13 +170,12 @@ class Characters(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -212,13 +208,12 @@ class GamingArea(GSprite):
         super().__init__(group)
         self.screen = screen
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -252,13 +247,12 @@ class Dialog(GSprite):
         self.screen = screen
         self.text = ""
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (
@@ -307,13 +301,12 @@ class Minimap(GSprite):
         self.rect = None
         self.image = None
 
-    def update(self):
-        if state.resize:
-            w, h, x, y = self.calculate()
-            self.image = pygame.Surface((w, h), pygame.SRCALPHA)
-            self.rect = self.image.get_rect()
-            self.rect.x = x
-            self.rect.y = y
+    def init(self):
+        w, h, x, y = self.calculate()
+        self.image = pygame.Surface((w, h), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
         area_w = (

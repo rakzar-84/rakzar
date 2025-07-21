@@ -57,9 +57,13 @@ class Player(GSprite):
                 "assets/personaggi/" + self.info["img"]
             ).convert_alpha()  # todo ridimensionare in base alle dimensioni
             self.rect = self.image.get_rect(
-                center=(start[0] * (dimension // 2), start[1] * (dimension // 2))
+                center=(
+                    start[0] * state.config["tile_size"] + dimension // 2,
+                    start[1] * state.config["tile_size"] + dimension // 2,
+                )
             )
             self.back = self.rect.center
+            self.camera.update()
         except Exception as e:
             raise RuntimeError("Impossibile caricare personaggio") from e
 
