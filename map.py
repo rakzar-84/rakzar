@@ -61,6 +61,8 @@ class Map:
                     colore = Counter(pixel_data).most_common(1)[0][0]
                     hex = "#{:02X}{:02X}{:02X}".format(*colore)
                     riga.append(self.tiles_types[hex])
+                    # todo
+                    # accessi ad altre mappe, ...
                     if self.tiles_types[hex]["cat"] == "start":
                         self.start = (bx, by)
                 self.tiled_map.append(riga)

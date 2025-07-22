@@ -1,4 +1,3 @@
-# todo evitare moduli con solo una classe
 import json
 import sys
 import traceback
@@ -6,6 +5,7 @@ import traceback
 import pygame
 
 import state
+from cache import Cache
 from core import Profiler, draw_error
 from loop import Loop
 from screen import Screen
@@ -15,6 +15,7 @@ screen = None
 try:
     with open("config.json", encoding="utf-8") as file:
         state.config = json.load(file)
+    state.cache = Cache()
     state.profiler = Profiler()
     pygame.init()
     screen = Screen()

@@ -1,43 +1,69 @@
 {
-    "porta_1":{
-        "tipo": "porta",
-        "img": 2,
-        "pos": [500, 2800],
-        "stato": "chiusa"
-    },
-    "leva_1":{
-        "tipo": "leva",
-        "img": 86,
-        "pos": [1400, 2600],
-        "stato": "off",
-        "target": "porta_1"
-    },
     "trappola_1":{
         "tipo": "trappola",
         "img": 61,
         "sottotipo": "trappola_A",
         "stato": "on",
-        "pos": [1000, 2900]
+        "pos": [1700, 2300]
     },
-    "iscrizione_1":{
-        "tipo": "iscrizione",
-        "img": 3,
-        "pos": [700, 2100],
-        "testo": "Ciao"
+    "trappola_2":{
+        "tipo": "trappola",
+        "img": 61,
+        "sottotipo": "trappola_A",
+        "stato": "on",
+        "pos": [3050, 2000]
+    },
+    "trappola_3":{
+        "tipo": "trappola",
+        "img": 61,
+        "sottotipo": "trappola_A",
+        "stato": "on",
+        "pos": [2650, 750]
+    },
+    "trappola_4":{
+        "tipo": "trappola",
+        "img": 61,
+        "sottotipo": "trappola_A",
+        "stato": "on",
+        "pos": [150, 1400]
+    },
+    "porta_1":{
+        "tipo": "porta",
+        "img": 2,
+        "pos": [500, 2450],
+        "stato": "chiusa"
+    },
+    "porta_2":{
+        "tipo": "porta",
+        "img": 2,
+        "pos": [1350, 950],
+        "stato": "chiusa"
+    },
+    "porta_3":{
+        "tipo": "porta",
+        "img": 2,
+        "pos": [200, 150],
+        "stato": "chiusa"
     },
     "ostacolo_1":{
         "tipo": "ostacolo",
         "img": 56,
         "sottotipo": "ostacolo_A",
-        "pos": [1000, 1950],
+        "pos": [1500, 700],
         "stato": "on"
     },
-    "leva_2":{
+    "leva_1":{
         "tipo": "leva",
         "img": 86,
-        "pos": [850, 1650],
+        "pos": [2600, 150],
         "stato": "off",
-        "target": "ostacolo_1"
+        "target": "porta_1"
+    },
+    "iscrizione_1":{
+        "tipo": "iscrizione",
+        "img": 3,
+        "pos": [1300, 1600],
+        "testo": "Ciao"
     },
     "cassa_1":{
         "tipo": "cassa",

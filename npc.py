@@ -39,9 +39,7 @@ class Npc(GSprite):
         try:
             self.id = id
             # todo creare i personaggi dei mostri in fase di creazione della partita
-            npg = self.db.getOne(
-                "SELECT * FROM npg WHERE map_id = '" + str(info["id"] + "'")
-            )
+            npg = self.db.getOne("SELECT * FROM npg WHERE map_id = '" + str(id) + "'")
             self.info = self.db.getOne(
                 "SELECT * FROM personaggi WHERE id = " + str(npg["personaggio_id"])
             )

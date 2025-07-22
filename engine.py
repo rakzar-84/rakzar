@@ -41,12 +41,15 @@ class Engine:
         self.visible_npc = pygame.sprite.Group()
 
     def init(
-        self, map: "Map", camera: "Camera", player: "Player", gamin_area: "GamingArea"
+        self, map: "Map", camera: "Camera", player: "Player", gaming_area: "GamingArea"
     ):
         self.map = map
         self.camera = camera
         self.player = player
-        self.gaming_area = gamin_area
+        self.gaming_area = gaming_area
+        state.cache.mem["map"] = {}
+        state.cache.mem["items"] = {}
+        state.cache.mem["npcs"] = {}
 
     def run(self):
         self.move_player()
@@ -78,11 +81,15 @@ class Engine:
             self.player.move(newx, newy)
 
     def go_back_player(self):
-        newx = round(self.player.back[0] / (state.config["tile_size"] // 2)) * (
-            state.config["tile_size"] // 2
+        newx = (
+            round(self.player.back[0] / (state.config["tile_size"] // 2))
+            * state.config["tile_size"]
+            // 2
         )
-        newy = round(self.player.back[1] / (state.config["tile_size"] // 2)) * (
-            state.config["tile_size"] // 2
+        newy = (
+            round(self.player.back[1] / (state.config["tile_size"] // 2))
+            * state.config["tile_size"]
+            // 2
         )
         self.player.move(newx, newy)
 
@@ -97,47 +104,64 @@ class Engine:
         camera_top = self.camera.y - self.camera.height // 2
         tile_start_x = camera_left // state.config["tile_size"]
         tile_start_y = camera_top // state.config["tile_size"]
-        state.profiler.take("pre ciclo")
         for y in range(tile_start_y, tile_start_y + tile_visibili_y):
             for x in range(tile_start_x, tile_start_x + tile_visibili_x):
                 if 0 <= x < self.map.blocchi_x and 0 <= y < self.map.blocchi_y:
-                    tile = self.map.tiled_map[y][x]
-                    img_tile = self.map.tiles_images[tile["type"]]
-                    rect_tile = pygame.Rect(
-                        x * state.config["tile_size"],
-                        y * state.config["tile_size"],
-                        state.config["tile_size"],
-                        state.config["tile_size"],
-                    )
-                    tile = Tile(img_tile, rect_tile, tile["type"], tile["cat"])
+                    key = str(x) + "-" + str(y)
+                    if key in state.cache.mem["map"]:
+                        tile_sprite = state.cache.mem["map"][key]
+                    else:
+                        tile = self.map.tiled_map[y][x]
+                        img_tile = self.map.tiles_images[tile["type"]]
+                        rect_tile = pygame.Rect(
+                            x * state.config["tile_size"],
+                            y * state.config["tile_size"],
+                            state.config["tile_size"],
+                            state.config["tile_size"],
+                        )
+                        tile_sprite = Tile(
+                            img_tile, rect_tile, tile["type"], tile["cat"]
+                        )
+                        state.cache.mem["map"][key] = tile_sprite
                     # todo tipi tile
                     # path: visione, movimento
+                    # path con movimento difficile
                     # wall:
-                    # ostacolo: visione
+                    # ostacolo (arredamento): visione
                     # oscuramento: movimento
-                    if tile.cat == "wall":
-                        self.visible_not_path.add(tile)
+                    if tile_sprite.cat == "wall":
+                        self.visible_not_path.add(tile_sprite)
                     else:
-                        self.visible_path.add(tile)
-                # qui
-                # todo una volta creati, andrebbero aggiunti e messi in cache
-                for id in self.map.items:
-                    image = self.map.tiles_images[self.map.items[id]["img"]]
-                    rect = image.get_rect()
-                    item_tile_x = rect.x // state.config["tile_size"]
-                    item_tile_y = rect.y // state.config["tile_size"]
-                    if x == item_tile_x and y == item_tile_y:
-                        self.visible_items.add(
-                            Item(id, self.map.items[id], image, rect)
-                        )
-                for npc in self.map.npc:
-                    npc_sprite = Npc(self.db)
-                    npc_sprite.load(npc)
-                    npc_tile_x = npc_sprite.rect.x // state.config["tile_size"]
-                    npc_tile_y = npc_sprite.rect.y // state.config["tile_size"]
-                    if x == npc_tile_x and y == npc_tile_y:
-                        self.visible_npc.add(npc_sprite)
-        state.profiler.take("post ciclo")
+                        self.visible_path.add(tile_sprite)
+                self.load_visible_items(x, y)
+                self.load_visible_npcs(x, y)
+
+    def load_visible_items(self, x: int, y: int):
+        for id in self.map.items:
+            if id in state.cache.mem["items"]:
+                item = state.cache.mem["items"][id]
+            else:
+                image = self.map.tiles_images[self.map.items[id]["img"]]
+                rect = image.get_rect()
+                item = Item(id, self.map.items[id], image, rect)
+                state.cache.mem["items"][id] = item
+            item_tile_x = item.rect.x // state.config["tile_size"]
+            item_tile_y = item.rect.y // state.config["tile_size"]
+            if x == item_tile_x and y == item_tile_y:
+                self.visible_items.add(item)
+
+    def load_visible_npcs(self, x: int, y: int):
+        for id in self.map.npc:
+            if id in state.cache.mem["npcs"]:
+                npc = state.cache.mem["npcs"][id]
+            else:
+                npc = Npc(self.db)
+                npc.load(id, self.map.npc[id])
+                state.cache.mem["npcs"][id] = npc
+            npc_tile_x = npc.rect.x // state.config["tile_size"]
+            npc_tile_y = npc.rect.y // state.config["tile_size"]
+            if x == npc_tile_x and y == npc_tile_y:
+                self.visible_npc.add(npc)
 
     def move_visible_monster(self):
         for npc in self.visible_npc:
@@ -262,8 +286,3 @@ class Engine:
         dist = 8  # todo parametrizzare?
         is_near = self.player.rect.colliderect(target.rect.inflate(dist, dist))
         return is_near
-
-    def subject(self, subject: "GSprite", target: "GSprite"):
-        distance = self.distance(subject.rect.center, target.rect.center)
-        is_within_range = subject.subject(distance)
-        return is_within_range

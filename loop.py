@@ -127,7 +127,11 @@ class Loop:
                     pass
                     # todo menù attacchi secondari (pausa?)
                     # todo menù azioni contestuali oggetto, personaggio, png (pausa?)
-            elif self.engine.within_range(self.player, clicked):
+            else:
+                distance = self.engine.distance(
+                    self.player.rect.center, clicked.rect.center
+                )
+                distance
                 if click == 1:
                     pass
                     # todo attacca mostro
@@ -172,7 +176,6 @@ class Loop:
 
     def render(self):
         try:
-            # todo usare una cache per non ricreare sempre tutte le surface/sprite
             self.screen.draw()
             self.interface.dialog.text += str(self.error) + "\n" if self.error else ""
             self.interface.draw()
