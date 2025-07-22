@@ -6,7 +6,7 @@ import traceback
 import pygame
 
 import state
-from core import draw_error
+from core import Profiler, draw_error
 from loop import Loop
 from screen import Screen
 
@@ -15,6 +15,7 @@ screen = None
 try:
     with open("config.json", encoding="utf-8") as file:
         state.config = json.load(file)
+    state.profiler = Profiler()
     pygame.init()
     screen = Screen()
     screen.init()
@@ -33,4 +34,7 @@ finally:
     if db:
         db.close()
     pygame.quit()
+    state.profiler.print()
+    # debug
+    # state.profiler.print_specific("tot", "start", "end")
     sys.exit()

@@ -35,9 +35,9 @@ class Npc(GSprite):
         self.razza = {}
         self.alerted = False
 
-    def load(self, info: dict):
+    def load(self, id: str, info: dict):
         try:
-            self.id = info["id"]
+            self.id = id
             # todo creare i personaggi dei mostri in fase di creazione della partita
             npg = self.db.getOne(
                 "SELECT * FROM npg WHERE map_id = '" + str(info["id"] + "'")

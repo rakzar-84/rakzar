@@ -97,6 +97,7 @@ class Engine:
         camera_top = self.camera.y - self.camera.height // 2
         tile_start_x = camera_left // state.config["tile_size"]
         tile_start_y = camera_top // state.config["tile_size"]
+        state.profiler.take("pre ciclo")
         for y in range(tile_start_y, tile_start_y + tile_visibili_y):
             for x in range(tile_start_x, tile_start_x + tile_visibili_x):
                 if 0 <= x < self.map.blocchi_x and 0 <= y < self.map.blocchi_y:
@@ -118,14 +119,17 @@ class Engine:
                         self.visible_not_path.add(tile)
                     else:
                         self.visible_path.add(tile)
-                for item in self.map.items.values():
-                    image = self.map.tiles_images[item["img"]]
+                # qui
+                # todo una volta creati, andrebbero aggiunti e messi in cache
+                for id in self.map.items:
+                    image = self.map.tiles_images[self.map.items[id]["img"]]
                     rect = image.get_rect()
                     item_tile_x = rect.x // state.config["tile_size"]
                     item_tile_y = rect.y // state.config["tile_size"]
                     if x == item_tile_x and y == item_tile_y:
-                        self.visible_items.add(Item(id, item, image, rect))
-                # bug questo blocco rallenta un botto, ma anche senza questo blocco sto a 15ms, decisamente troppi
+                        self.visible_items.add(
+                            Item(id, self.map.items[id], image, rect)
+                        )
                 for npc in self.map.npc:
                     npc_sprite = Npc(self.db)
                     npc_sprite.load(npc)
@@ -133,6 +137,7 @@ class Engine:
                     npc_tile_y = npc_sprite.rect.y // state.config["tile_size"]
                     if x == npc_tile_x and y == npc_tile_y:
                         self.visible_npc.add(npc_sprite)
+        state.profiler.take("post ciclo")
 
     def move_visible_monster(self):
         for npc in self.visible_npc:

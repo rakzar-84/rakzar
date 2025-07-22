@@ -24,7 +24,7 @@ class Map:
     tiles_images: list
     tiles_types: dict
     items: dict
-    npc: list
+    npc: dict
 
     def __init__(self):
         self.width = 0

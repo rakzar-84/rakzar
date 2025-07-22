@@ -1,4 +1,3 @@
-import time
 import traceback
 from typing import TYPE_CHECKING
 
@@ -56,9 +55,8 @@ class Loop:
     def execute(self):
         state.running = 1
         while state.running:
-            # debug
-            state.vars["start"] = time.perf_counter()
             try:
+                state.profiler.reset()
                 self.clock.tick(state.config["fps"])
                 self.check_input()
                 self.update()
@@ -70,11 +68,6 @@ class Loop:
                 self.error = e
             # qui
             self.render()
-            # debug
-            state.vars["delta"] = time.perf_counter() - state.vars["start"]
-            # debug
-            if "delta" in state.vars:
-                print(f"Frame time: {state.vars['delta']*1000:.2f} ms")
 
     def check_input(self):
         state.keys = pygame.key.get_pressed()
