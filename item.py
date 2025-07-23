@@ -58,9 +58,7 @@ class Item(GSprite):
         elif self.type == "cassa":
             engine.go_back_npc(npc)
 
-    def act(
-        self, target: pygame.sprite.Sprite, items: dict, dialog: pygame.sprite.Sprite
-    ):
+    def act(self, target: pygame.sprite.Sprite, items: dict, dialog: pygame.sprite.Sprite):
         if self.type == "leva":
             if self.info["stato"] == "off":
                 self.info["stato"] = "on"

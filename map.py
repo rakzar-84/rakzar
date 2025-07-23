@@ -61,8 +61,6 @@ class Map:
                     colore = Counter(pixel_data).most_common(1)[0][0]
                     hex = "#{:02X}{:02X}{:02X}".format(*colore)
                     riga.append(self.tiles_types[hex])
-                    # todo
-                    # accessi ad altre mappe, ...
                     if self.tiles_types[hex]["cat"] == "start":
                         self.start = (bx, by)
                 self.tiled_map.append(riga)
@@ -72,21 +70,15 @@ class Map:
             raise RuntimeError("Caricamento mappa non riuscito") from e
 
     def load_tiles_images(self):
-        pil_immagine = Image.open(state.config["mappa"] + "tilesheet.png").convert(
-            "RGB"
-        )
+        pil_immagine = Image.open(state.config["mappa"] + "tilesheet.png").convert("RGB")
         w, h = pil_immagine.size
         tiles_x = w // state.config["tile_size"]
         tiles_y = h // state.config["tile_size"]
-        immagine = pygame.image.fromstring(
-            pil_immagine.tobytes(), pil_immagine.size, pil_immagine.mode
-        )
+        immagine = pygame.image.fromstring(pil_immagine.tobytes(), pil_immagine.size, pil_immagine.mode)
         for index in range(tiles_x * tiles_y):
             x = (index % tiles_x) * state.config["tile_size"]
             y = (index // tiles_x) * state.config["tile_size"]
-            tile_img = immagine.subsurface(
-                pygame.Rect(x, y, state.config["tile_size"], state.config["tile_size"])
-            ).copy()
+            tile_img = immagine.subsurface(pygame.Rect(x, y, state.config["tile_size"], state.config["tile_size"])).copy()
             self.tiles_images.append(tile_img)
 
     def load_tiles_type(self):
@@ -107,7 +99,13 @@ class Map:
         for tile in engine.visible_path:
             rect_area = tile.rect.move(-camera_left, -camera_top)
             area.blit(tile.image, rect_area)
-        for tile in engine.visible_not_path:
+        for tile in engine.visible_fog:
+            rect_area = tile.rect.move(-camera_left, -camera_top)
+            area.blit(tile.image, rect_area)
+        for tile in engine.visible_obstacle:
+            rect_area = tile.rect.move(-camera_left, -camera_top)
+            area.blit(tile.image, rect_area)
+        for tile in engine.visible_wall:
             rect_area = tile.rect.move(-camera_left, -camera_top)
             area.blit(tile.image, rect_area)
         for item in engine.visible_items:
@@ -120,9 +118,7 @@ class Map:
 
 class Tile(GSprite):
 
-    def __init__(
-        self, image: pygame.surface.Surface, rect: pygame.Rect, type: int, cat: str
-    ):
+    def __init__(self, image: pygame.surface.Surface, rect: pygame.Rect, type: int, cat: str):
         super().__init__()
         self.image = image
         self.rect = rect

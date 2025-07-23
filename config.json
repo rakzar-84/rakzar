@@ -19,5 +19,6 @@
 
     },
     "tile_size": 50,
+    "tile_near": 8,
     "debug":true
 }

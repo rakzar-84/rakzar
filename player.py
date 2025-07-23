@@ -35,32 +35,22 @@ class Player(GSprite):
     def load(self, start: tuple):
         try:
             self.info = self.db.getOne("SELECT * FROM personaggi WHERE tipo = 'main'")
-            razza = self.db.getOne(
-                "SELECT * FROM razze WHERE id = " + str(self.info["razza_id"])
-            )
+            razza = self.db.getOne("SELECT * FROM razze WHERE id = " + str(self.info["razza_id"]))
             self.info["razza"] = razza
             dimension = razza["dimensione"] * state.config["tile_size"]
-            self.state = self.db.getOne(
-                "SELECT * FROM stato WHERE personaggio_id = "
-                + str(self.info["razza_id"])
-            )
+            self.state = self.db.getOne("SELECT * FROM stato WHERE personaggio_id = " + str(self.info["razza_id"]))
             self.equipment = self.db.get(
-                "SELECT * FROM oggetti AS o INNER JOIN equipaggiamento AS e ON e.oggetto_id = o.id WHERE e.personaggio_id = "
-                + str(self.info["id"])
+                "SELECT * FROM oggetti AS o INNER JOIN equipaggiamento AS e ON e.oggetto_id = o.id WHERE e.personaggio_id = " + str(self.info["id"])
             )
             # todo dove mettere le caratteristiche degli oggetti?
             self.abilities = self.db.get(
                 "SELECT * FROM abilita AS a INNER JOIN abilita_personaggi AS p ON p.abilita_id = a.id WHERE p.personaggio_id = "
                 + str(self.info["id"])
             )
-            self.image = pygame.image.load(
-                "assets/personaggi/" + self.info["img"]
-            ).convert_alpha()  # todo ridimensionare in base alle dimensioni
+            self.image = pygame.image.load("assets/personaggi/" + self.info["img"]).convert_alpha()
+            self.image = pygame.transform.smoothscale(self.image, (dimension, dimension))
             self.rect = self.image.get_rect(
-                center=(
-                    start[0] * state.config["tile_size"] + dimension // 2,
-                    start[1] * state.config["tile_size"] + dimension // 2,
-                )
+                center=(start[0] * state.config["tile_size"] + dimension // 2, start[1] * state.config["tile_size"] + dimension // 2)
             )
             self.back = self.rect.center
             self.camera.update()
@@ -77,29 +67,12 @@ class Player(GSprite):
         if camera.width // 2 < self.rect.centerx < mappa.width - camera.width // 2:
             x = area.get_rect().centerx - state.config["tile_size"] // 2
         else:
-            x = (
-                self.rect.centerx
-                - camera.x
-                + camera.width // 2
-                - state.config["tile_size"] // 2
-            )
+            x = self.rect.centerx - camera.x + camera.width // 2 - state.config["tile_size"] // 2
         if camera.height // 2 < self.rect.centery < mappa.height - camera.height // 2:
             y = area.get_rect().centery - state.config["tile_size"] // 2
         else:
-            y = (
-                self.rect.centery
-                - camera.y
-                + camera.height // 2
-                - state.config["tile_size"] // 2
-            )
+            y = self.rect.centery - camera.y + camera.height // 2 - state.config["tile_size"] // 2
         area.blit(self.image, (x, y))
 
     def add_item(self, item: "Item"):
-        self.equipment.append(
-            {
-                "nome": item.id,
-                "oggetto": item.info["sottotipo"],
-                "qta": 1,
-                "slot": "zaino",
-            }
-        )
+        self.equipment.append({"nome": item.id, "oggetto": item.info["sottotipo"], "qta": 1, "slot": "zaino"})

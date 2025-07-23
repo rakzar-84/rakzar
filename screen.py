@@ -14,9 +14,7 @@ class Screen:
 
     def init(self):
         self.screen_info = pygame.display.Info()
-        pygame.display.set_caption(
-            state.config["nome"] + " - v. " + state.config["versione"]
-        )
+        pygame.display.set_caption(state.config["nome"] + " - v. " + state.config["versione"])
         if state.config["fullscreen"]:
             self.to_fullscreen()
         else:
@@ -24,7 +22,7 @@ class Screen:
 
     def to_window(self):
         if self.image is not None and bool(self.image.get_flags() & pygame.FULLSCREEN):
-            # todo reimpostare
+            # debug reimpostare
             # w = self.screen_info.current_w - 100
             # h = self.screen_info.current_h - 100
             # self.image = pygame.display.set_mode((w, h), pygame.RESIZABLE)

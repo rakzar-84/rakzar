@@ -6,6 +6,7 @@ import state
 from core import GSprite
 
 if TYPE_CHECKING:
+    from map import Map
     from screen import Screen
 
 
@@ -57,10 +58,7 @@ class Menu(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["left"]
         h = state.config["interfaccia"]["top"]
         x = state.config["interfaccia"]["cornice"]
@@ -99,16 +97,10 @@ class PartyInfo(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["patyinfo"]
         h = state.config["interfaccia"]["top"]
-        x = (
-            area_w * state.config["interfaccia"]["left"]
-            + state.config["interfaccia"]["cornice"]
-        )
+        x = area_w * state.config["interfaccia"]["left"] + state.config["interfaccia"]["cornice"]
         y = state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
@@ -138,16 +130,10 @@ class MissionInfo(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["missione"]
         h = state.config["interfaccia"]["top"]
-        left = (
-            state.config["interfaccia"]["left"]
-            + state.config["interfaccia"]["patyinfo"]
-        )
+        left = state.config["interfaccia"]["left"] + state.config["interfaccia"]["patyinfo"]
         x = area_w * left + state.config["interfaccia"]["cornice"]
         y = state.config["interfaccia"]["cornice"]
         return w, h, x, y
@@ -178,20 +164,10 @@ class Characters(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
-        area_h = (
-            self.screen.screen_info.current_h
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
+        area_h = self.screen.screen_info.current_h - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["left"]
-        h = (
-            area_h
-            - state.config["interfaccia"]["cornice"]
-            - state.config["interfaccia"]["top"]
-        )
+        h = area_h - state.config["interfaccia"]["cornice"] - state.config["interfaccia"]["top"]
         x = state.config["interfaccia"]["cornice"]
         y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
@@ -216,20 +192,11 @@ class GamingArea(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
-        area_h = (
-            self.screen.screen_info.current_h
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
+        area_h = self.screen.screen_info.current_h - state.config["interfaccia"]["cornice"] * 2
         w = area_w * (1 - state.config["interfaccia"]["left"])
         h = area_h - state.config["interfaccia"]["top"]
-        x = (
-            area_w * state.config["interfaccia"]["left"]
-            + state.config["interfaccia"]["cornice"]
-        )
+        x = area_w * state.config["interfaccia"]["left"] + state.config["interfaccia"]["cornice"]
         y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
@@ -255,31 +222,13 @@ class Dialog(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
-        area_h = (
-            self.screen.screen_info.current_h
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
+        area_h = self.screen.screen_info.current_h - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["dialogw"]
         h = state.config["interfaccia"]["dialogh"]
-        offset = (
-            state.config["interfaccia"]["left"]
-            + (
-                1
-                - state.config["interfaccia"]["left"]
-                - state.config["interfaccia"]["dialogw"]
-            )
-            / 2
-        )
+        offset = state.config["interfaccia"]["left"] + (1 - state.config["interfaccia"]["left"] - state.config["interfaccia"]["dialogw"]) / 2
         x = area_w * offset + state.config["interfaccia"]["cornice"]
-        y = (
-            area_h
-            - state.config["interfaccia"]["dialogh"]
-            + state.config["interfaccia"]["cornice"]
-        )
+        y = area_h - state.config["interfaccia"]["dialogh"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y
 
     def draw(self):
@@ -295,11 +244,14 @@ class Dialog(GSprite):
 
 class Minimap(GSprite):
 
+    map: Map
+
     def __init__(self, group: pygame.sprite.Group, screen: "Screen"):
         super().__init__(group)
         self.screen = screen
         self.rect = None
         self.image = None
+        self.map = None
 
     def init(self):
         w, h, x, y = self.calculate()
@@ -309,12 +261,9 @@ class Minimap(GSprite):
         self.rect.y = y
 
     def calculate(self) -> tuple[int, int, int, int]:
-        area_w = (
-            self.screen.screen_info.current_w
-            - state.config["interfaccia"]["cornice"] * 2
-        )
+        area_w = self.screen.screen_info.current_w - state.config["interfaccia"]["cornice"] * 2
         w = area_w * state.config["interfaccia"]["minimap"]
-        h = w // 4 * 3  # todo le mappe non possono avere tutte queste proporzioni
+        h = w // self.map.width * self.map.height
         x = area_w - w + state.config["interfaccia"]["cornice"]
         y = state.config["interfaccia"]["top"] + state.config["interfaccia"]["cornice"]
         return w, h, x, y

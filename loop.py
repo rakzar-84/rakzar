@@ -66,7 +66,6 @@ class Loop:
             except Exception as e:
                 print(traceback.format_exc())
                 self.error = e
-            # qui
             self.render()
 
     def check_input(self):
@@ -117,10 +116,9 @@ class Loop:
         if click:
             if self.engine.check_near(clicked):
                 if click == 1:
-                    clicked.act(
-                        self.player, self.map.items, self.interface.dialog
-                    )  # azione contestuale principale
+
                     # todo attacca mostro
+                    clicked.act(self.player, self.map.items, self.interface.dialog)  # azione contestuale principale
                     # todo parla con png
                     # todo seleziona personaggio
                 elif click == 2:
@@ -128,9 +126,7 @@ class Loop:
                     # todo menù attacchi secondari (pausa?)
                     # todo menù azioni contestuali oggetto, personaggio, png (pausa?)
             else:
-                distance = self.engine.distance(
-                    self.player.rect.center, clicked.rect.center
-                )
+                distance = self.engine.distance(self.player.rect.center, clicked.rect.center)
                 distance
                 if click == 1:
                     pass
@@ -145,18 +141,8 @@ class Loop:
         click = 0
         clicked = None
         if state.mouse:
-            x = (
-                state.mouse["pos"][0]
-                - self.interface.gaming_area.rect.x
-                + self.camera.x
-                - self.interface.gaming_area.rect.width // 2
-            )
-            y = (
-                state.mouse["pos"][1]
-                - self.interface.gaming_area.rect.y
-                + self.camera.y
-                - self.interface.gaming_area.rect.height // 2
-            )
+            x = state.mouse["pos"][0] - self.interface.gaming_area.rect.x + self.camera.x - self.interface.gaming_area.rect.width // 2
+            y = state.mouse["pos"][1] - self.interface.gaming_area.rect.y + self.camera.y - self.interface.gaming_area.rect.height // 2
             for item in self.engine.visible_items:
                 if state.mouse["button"] == "left" and item.rect.collidepoint(x, y):
                     click = 1
@@ -178,6 +164,7 @@ class Loop:
         try:
             self.screen.draw()
             self.interface.dialog.text += str(self.error) + "\n" if self.error else ""
+            self.interface.minimap.map = self.map
             self.interface.draw()
             self.map.draw(self.interface.gaming_area.image, self.camera, self.engine)
             self.player.draw(self.interface.gaming_area.image, self.camera, self.map)
