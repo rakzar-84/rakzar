@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from camera import Camera
     from core import GSprite
     from db import Db
-    from interface import GamingArea
+    from gamestate.interface.gameplay import GamingArea
     from map import Map
     from player import Player
 

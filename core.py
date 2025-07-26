@@ -53,17 +53,20 @@ class Profiler:
                 print(f"{label} time: {delta*1000:.2f} ms")
 
 
-def draw_error(screen: pygame.surface.Surface, e: Exception):
-    if screen:
-        screen.fill((0, 0, 0))
-        y = 10
-        font = pygame.font.SysFont(None, 24)
-        if state.config["debug"]:
-            error_text = traceback.format_exc()
-        else:
-            error_text = str(e)
-        for line in error_text.splitlines():
-            text_surface = font.render(line, True, (255, 0, 0))
-            screen.blit(text_surface, (10, y))
-            y += 30
-        pygame.display.flip()
+def draw_error(e: Exception):
+    screen_info = pygame.display.Info()
+    w = screen_info.current_w - 100
+    h = screen_info.current_h - 100
+    screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
+    screen.fill((0, 0, 0))
+    y = 10
+    font = pygame.font.SysFont(None, 24)
+    if state.config["debug"]:
+        error_text = traceback.format_exc()
+    else:
+        error_text = str(e)
+    for line in error_text.splitlines():
+        text_surface = font.render(line, True, (255, 0, 0))
+        screen.blit(text_surface, (10, y))
+        y += 30
+    pygame.display.flip()

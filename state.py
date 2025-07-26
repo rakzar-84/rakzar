@@ -1,6 +1,6 @@
 config = {}
-running = 0
-resize = False
+running = ""
+resize = True
 keys = None
 mouse = {}
 profiler = None
